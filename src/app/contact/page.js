@@ -22,7 +22,7 @@ export default function ContactPage() {
             Get In Touch
           </h1>
           <p className="text-xl md:text-2xl max-w-3xl mx-auto italic animate-fade-in-up delay-200">
-            We'd love to hear from you. Reach out to discuss your Studios needs!
+            We would love to hear from you. Reach out to discuss your Studios needs!
           </p>
         </div>
       </section>

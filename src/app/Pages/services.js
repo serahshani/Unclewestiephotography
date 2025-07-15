@@ -9,12 +9,12 @@ export default function ServicesPage() {
           Destination photographer based in <span className="text-[#012D26]">Nairobi, Nairobi County, Kenya</span>.
         </h2>
         <p className="max-w-4xl mx-auto text-lg md:text-xl text-gray-800 mb-16 italic font-medium"> {/* Larger, italic, and slightly darker text */}
-          "Experience the magic of <span className="font-semibold text-[#012D26]">Nairobi</span> as the perfect backdrop for your special
+          Experience the magic of <span className="font-semibold text-[#012D26]">Nairobi</span> as the perfect backdrop for your special
           moments with <span className="text-[#012D26] font-bold">Uncle Westiee Studios</span>. Whether it’s intimate couples’
           portraits, joyous family gatherings, or elegant fashion shoots, bespoke
           Studios packages are designed to meet your needs and exceed your
           expectations. From solo portraits to grand wedding celebrations, each
-          photo tells your unique story."
+          photo tells your unique story.
         </p>
 
         <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-16 relative"> {/* Larger, bold, and added relative for pseudo-element */}
