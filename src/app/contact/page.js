@@ -37,11 +37,11 @@ export default function ContactPage() {
               <div className="space-y-6 text-lg text-gray-700">
                 <div className="flex items-center space-x-4">
                   <FaPhone className="text-[#012D26] text-2xl" />
-                  <span>+254 791 264173</span> {/* Your phone number */}
+                  <span>+254791264173</span> {/* Your phone number */}
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaWhatsapp className="text-[#012D26] text-2xl" />
-                  <span>+254 791 264173</span> {/* Your WhatsApp number */}
+                  <span>+254791264173</span> {/* Your WhatsApp number */}
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaEnvelope className="text-[#012D26] text-2xl" />

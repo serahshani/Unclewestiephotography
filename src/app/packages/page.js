@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react'; // Icon for features
 
-const PHONE_NUMBER = '0791264173'; // Your WhatsApp number (no "+", no spaces)
+const PHONE_NUMBER = '+254791264173'; // Your WhatsApp number (no "+", no spaces)
 const WHATSAPP_BASE = `https://wa.me/${PHONE_NUMBER}`;
 
 export default function PackagesPage() {

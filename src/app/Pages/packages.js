@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image'; // Import the Next.js Image component
 
-const PHONE_NUMBER = '0791 264173'; // ← replace with your WhatsApp number (no “+”, no spaces)
+const PHONE_NUMBER = '+254791264173'; // ← replace with your WhatsApp number (no “+”, no spaces)
 const WHATSAPP_BASE = `https://wa.me/${PHONE_NUMBER}`;
 
 const PACKAGES = [

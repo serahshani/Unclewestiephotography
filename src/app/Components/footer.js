@@ -31,16 +31,16 @@ export default function Footer() {
 
         {/* Social Icons */}
         <div className="flex justify-items-start justify-center space-x-10 text-green-950">
-          <Link href="https://facebook.com/yourpage" target="_blank" aria-label="Facebook">
+          <Link href="https://www.facebook.com/p/Uncle_westiee-photography-100076434076242/" target="_blank" aria-label="Facebook">
             <Facebook size={28} className="hover:text-gray-700" />
           </Link>
-          <Link href="https://instagram.com/yourprofile" target="_blank" aria-label="Instagram">
+          <Link href="https://www.instagram.com/uncle_westiee_studios/?hl=en" target="_blank" aria-label="Instagram">
             <Instagram size={28} className="hover:text-gray-700" />
           </Link>
-          <Link href="mailto:youremail@example.com" aria-label="Email">
+          <Link href="mailto:info@unclywestieestudios.co.ke" aria-label="Email">
             <Mail size={28} className="hover:text-gray-700" />
           </Link>
-          <Link href="https://wa.me/0791264173" target="_blank" aria-label="WhatsApp">
+          <Link href="https://wa.me/+254791264173" target="_blank" aria-label="WhatsApp">
             <FaWhatsapp size={28} className="hover:text-black" />
           </Link>
           <Link href="#top" aria-label="Back to top">
