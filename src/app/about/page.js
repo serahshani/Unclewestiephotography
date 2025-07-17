@@ -38,7 +38,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="text-lg text-gray-700 space-y-6">
               <p>
-                Welcome to Uncle Westiee Studios, where every click is driven by a profound passion for storytelling. Founded by GOEFREY MUNGAI, our studio has grown from a simple love for the lens into a dedicated team committed to preserving lifes most precious moments in Nairobi, and beyond.
+                Welcome to Uncle Westiee Studios, where every click is driven by a profound passion for storytelling. Our studio has grown from a simple love for the lens into a dedicated team committed to preserving lifes most precious moments in Nairobi, and beyond.
               </p>
               <p>
                 Our philosophy is simple: **Studios is not just about taking pictures; it is about capturing emotions, telling a narrative, and creating timeless art.** We believe that every individual, family, and event holds a unique story waiting to be beautifully told.

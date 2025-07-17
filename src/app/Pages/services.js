@@ -6,10 +6,10 @@ export default function ServicesPage() {
       {/* Scenic Serenity Feature Grid */}
       <section className="bg-gray-200 text-center py-20 px-6 sm:px-10"> {/* Increased vertical padding and horizontal padding */}
         <h2 className="text-3xl md:text-5xl font-extrabold text-[#012D26] mb-6 leading-tight"> {/* Larger, bolder, and more prominent */}
-          Destination photographer based in <span className="text-[#012D26]">Nairobi, Nairobi County, Kenya</span>.
+          Destination photographer based in <span className="text-[#012D26]">Samburu, Kenya</span>.
         </h2>
         <p className="max-w-4xl mx-auto text-lg md:text-xl text-gray-800 mb-16 italic font-medium"> {/* Larger, italic, and slightly darker text */}
-          Experience the magic of <span className="font-semibold text-[#012D26]">Nairobi</span> as the perfect backdrop for your special
+          Experience the magic of <span className="font-semibold text-[#012D26]">Samburu</span> as the perfect backdrop for your special
           moments with <span className="text-[#012D26] font-bold">Uncle Westiee Studios</span>. Whether it’s intimate couples’
           portraits, joyous family gatherings, or elegant fashion shoots, bespoke
           Studios packages are designed to meet your needs and exceed your

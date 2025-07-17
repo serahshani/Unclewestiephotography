@@ -4,9 +4,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'i.ytimg.com', // Correct hostname for YouTube thumbnails
+        hostname: 'i.ytimg.com',
         port: '',
-        pathname: '/vi/**', // Allows any path under /vi/
+        pathname: '/vi/**' // Allows any path under /vi/
       },
  ] },
   // Add any other Next.js configurations here if you have them

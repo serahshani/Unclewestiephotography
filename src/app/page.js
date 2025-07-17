@@ -71,19 +71,20 @@ export default function Home() {
 
         {/* Hero Content with typing effect */}
         <div className="flex flex-col items-center justify-center h-full text-center text-white px-4">
+          {/* Removed the extra div that was creating the box */}
           <motion.div
-            className="border border-white rounded-md w-16 h-16 flex items-center justify-center mb-4 overflow-hidden" // Added overflow-hidden for good measure
             variants={logoVariants}
             initial="hidden"
             animate="visible"
+            className="mb-4" // Added margin-bottom directly to this div for spacing
           >
-            {/* Replaced the <span> with an Image component for the logo */}
             <Image
-              src="/Westieelogo.png" // <---- IMPORTANT: Replace with the actual path to your logo image
+              src="/Westieelogo.png" // IMPORTANT: Ensure this path is correct
               alt="Uncle Westiee Logo"
-              width={64}  // Adjust width as needed for your logo within the 64x64 container
-              height={64} // Adjust height as needed for your logo within the 64x64 container
-              className="object-contain" // Use object-contain to ensure the whole logo is visible, or object-cover if you want it to fill and potentially crop
+              width={100} // Adjust width as needed for your logo
+              height={100} // Adjust height as needed for your logo
+              // You can use object-contain to ensure the whole logo is visible, or object-cover if you want it to fill and potentially crop
+              // className="object-contain" // Uncomment if you need specific object-fit behavior for the logo
             />
           </motion.div>
 

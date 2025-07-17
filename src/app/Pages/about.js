@@ -24,12 +24,12 @@ export default function AboutPage() {
           <div className="w-full md:w-1/2 text-black space-y-6">
             <p>
               Welcome to my world of Studios! My name is Uncle Westiee, I’m a passionate
-              photographer based in Nairobi, Nairobi County, Kenya. With a keen eye for detail and a love for capturing
+              photographer based in Samburu, Kenya. With a keen eye for detail and a love for capturing
               life’s most precious moments, I specialize in wedding, portrait, and
               fashion Studios.
             </p>
             <p>
-              My journey has taken me across the globe, but Nairobi’s enchanting
+              My journey has taken me across the globe, but Samuru’s enchanting
               sunsets and stunning vistas have become my muse. As a destination
               photographer, I am thrilled to offer my services not only here in
               Nairobi but worldwide, creating timeless memories wherever your

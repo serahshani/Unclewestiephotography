@@ -1,6 +1,6 @@
 import Navbar from '../Components/navbar';
 import Image from 'next/image'; // For potential icons or background images
-import { FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa'; // Example icons
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaYoutube, FaTiktok } from 'react-icons/fa'; // Example icons
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa'; // Social media icons
 
 export default function ContactPage() {
@@ -37,31 +37,47 @@ export default function ContactPage() {
               <div className="space-y-6 text-lg text-gray-700">
                 <div className="flex items-center space-x-4">
                   <FaPhone className="text-[#012D26] text-2xl" />
-                  <span>+254 7XX XXX XXX</span> {/* Replace with your phone number */}
+                  <span>+254 791 264173</span> {/* Your phone number */}
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaWhatsapp className="text-[#012D26] text-2xl" />
-                  <span>+254 7XX XXX XXX</span> {/* Replace with your WhatsApp number */}
+                  <span>+254 791 264173</span> {/* Your WhatsApp number */}
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaEnvelope className="text-[#012D26] text-2xl" />
-                  <span>info@unclewestiee.com</span> {/* Replace with your email */}
+                  <span>info@unclewestiee.com</span> {/* Your email */}
+                </div>
+                {/* --- Two Locations Separated --- */}
+                <div className="flex items-start space-x-4">
+                  <FaMapMarkerAlt className="text-[#012D26] text-2xl mt-1" />
+                  <span>
+                    Main branch: Nairobi, Kenya
+                  </span>
                 </div>
                 <div className="flex items-start space-x-4">
                   <FaMapMarkerAlt className="text-[#012D26] text-2xl mt-1" />
-                  <span>Your Studio Address, City, Country</span> {/* Replace with your address */}
+                  <span>
+                   Other branches: Maralal, Samburu, Kenya
+                  </span>
                 </div>
+                {/* ----------------------------- */}
               </div>
               <div className="mt-8 text-center">
                 <h3 className="text-xl font-semibold text-[#012D26] mb-4">Follow Us</h3>
                 <div className="flex justify-center space-x-6">
-                  <a href="https://instagram.com/yourprofile" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-600 transition-colors duration-300">
+                  <a href="https://www.instagram.com/uncle_westiee_studios/?hl=en" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-600 transition-colors duration-300">
                     <FaInstagram size={36} />
                   </a>
-                  <a href="https://facebook.com/yourprofile" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">
+                  <a href="https://www.facebook.com/p/Uncle_westiee-photography-100076434076242/" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">
                     <FaFacebook size={36} />
                   </a>
                   {/* Add more social media links as needed */}
+                  <a href="https://www.youtube.com/channel/UCaPJSHbeHHA5Wft0ywekl-A" target='_blank' rel='noopener noreferrer' className='text-gray-600 hover:text-red-600 transition-colors duration-300'>
+                     <FaYoutube size={36}/>
+                  </a>
+                  <a href="https://www.tiktok.com/@uncle_westiee?lang=en" target='_blank' rel='noopener noreferrer' className='text-gray-600 hover:text-black transition-colors duration-300'>
+                     <FaTiktok size={36}/>
+                  </a>
                 </div>
               </div>
             </div>
@@ -127,9 +143,9 @@ export default function ContactPage() {
           <div className="mt-20">
             <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">Find Us on the Map</h2>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              {/* Replace with your actual Google Maps embed iframe */}
+              {/* This map embed is for Ruiru, Kiambu. Consider adding a second map or a combined one for Maralal if desired. */}
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.9482705051016!2d36.9691459!3d-1.2001552!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f3ddb4a0c8b21%3A0xc4a3d4f8b9e6e8e!2sRuiru%2C%20Kiambu%20County!5e0!3m2!1sen!2ske!4v1700000000000!5m2!1sen!2ske" // Example for Ruiru - update with your precise location
+                src="https://maps.app.goo.gl/f16PpTcq9YnYcCaPA" // Example for Ruiru, Kenya - Update with actual embed code
                 width="100%"
                 height="450"
                 style={{ border: 0 }}
