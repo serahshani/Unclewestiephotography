@@ -12,7 +12,7 @@ export default function ServicesPage() {
       {/* Hero Section: Our Services */}
       <section className="relative w-full h-[600px] flex items-center justify-center text-white overflow-hidden pt-50">
         <Image
-          src="/Gallery2.jpg" // Replace with a compelling image representing your services
+          src="/Servicespagehero.jpg" // Replace with a compelling image representing your services
           alt="Diverse Studios Services"
           fill={true}
           className="object-cover object-center brightness-[.4]"

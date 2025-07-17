@@ -79,10 +79,10 @@ export default function Home() {
             className="mb-4" // Added margin-bottom directly to this div for spacing
           >
             <Image
-              src="/Westieelogo.png" // IMPORTANT: Ensure this path is correct
+              src="/Hero4.png" // IMPORTANT: Ensure this path is correct
               alt="Uncle Westiee Logo"
-              width={100} // Adjust width as needed for your logo
-              height={100} // Adjust height as needed for your logo
+              width={300} // Adjust width as needed for your logo
+              height={300} // Adjust height as needed for your logo
               // You can use object-contain to ensure the whole logo is visible, or object-cover if you want it to fill and potentially crop
               // className="object-contain" // Uncomment if you need specific object-fit behavior for the logo
             />
