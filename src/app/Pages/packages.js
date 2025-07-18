@@ -111,14 +111,14 @@ export default function Packages() {
                   ))}
                 </ul>
 
-                {/* Book Now */}
+                {/* INQUIRE NOW */}
                 <a
                   href={waLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block text-center bg-[#012D26] text-white py-2 rounded hover:bg-gray-800 transition"
                 >
-                  Book Now
+                  INQUIRE NOW
                 </a>
               </div>
             </div>

@@ -11,7 +11,7 @@ const links = [
   { href: '/services#services-section', label: 'SERVICES' },
   { href: '/portfolio', label: 'PORTFOLIO' },
   { href: '/packages#packages-section', label: 'PACKAGES' },
-  // Removed the 'BOOK NOW' link
+  // Removed the 'INQUIRE NOW' link
   { href: '/contact', label: 'CONTACT' },
 ];
 

@@ -20,8 +20,8 @@ export default function PackagesPage() {
       ],
       idealFor: 'Individuals, professional headshots, simple family portraits.',
       // No explicit price here, as it's assumed to be part of the WhatsApp inquiry
-      buttonText: 'Book Essential',
-      whatsappMessage: 'Hello! I would like to book the Essential Portrait package.',
+      buttonText: 'Inquire Essential',
+      whatsappMessage: 'Hello! I would like to inquire about the Essential Portrait package.',
     },
     {
       name: 'Premium Event',
@@ -33,8 +33,8 @@ export default function PackagesPage() {
         'Basic video highlights (3-5 min)', // Example feature
       ],
       idealFor: 'Birthday parties, anniversaries, corporate gatherings.',
-      buttonText: 'Book Premium',
-      whatsappMessage: 'Hello! I would like to book the Premium Event package.',
+      buttonText: 'Inquire Premium',
+      whatsappMessage: 'Hello! I would like to Inquire about the Premium Event package.',
     },
     {
       name: 'Luxury Wedding',
@@ -47,8 +47,8 @@ export default function PackagesPage() {
         'Cinematic wedding video (20-30 min)',
       ],
       idealFor: 'Couples seeking comprehensive, premium wedding Studios.',
-      buttonText: 'Book Luxury',
-      whatsappMessage: 'Hello! I would like to book the Luxury Wedding package.',
+      buttonText: 'Inquire Luxury',
+      whatsappMessage: 'Hello! I would like to Inquire about the Luxury Wedding package.',
     },
     {
       name: 'Commercial Starter',
