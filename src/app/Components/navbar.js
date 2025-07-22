@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { HiOutlineMenu, HiX } from 'react-icons/hi';
 
 const links = [
+  { href: '/', label: 'HOME' },
   { href: '/about#about-section', label: 'ABOUT' },
   { href: '/services#services-section', label: 'SERVICES' },
   { href: '/portfolio', label: 'PORTFOLIO' },

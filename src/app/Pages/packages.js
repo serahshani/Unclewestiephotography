@@ -14,19 +14,20 @@ const PACKAGES = [
     bullets: [
       'Scenic view location',
       '12 professionally edited photos (selected by you)',
-      '10 days delivery',
     ],
+    description: 'Perfect for personal branding, modeling, or just capturing your essence.',
+    quote: '"Great photography is about depth of feeling, not depth of field." – Peter Adams',
   },
   {
     id: 'couple',
     title: 'Couple Photoshoot / Proposal',
     image: '/couple.jpg', // Replace with your image path or URL
-  
     bullets: [
       'Scenic view location',
       '15 professionally edited photos (selected by you)',
-      '15 days delivery',
     ],
+    description: 'Capture your love story or that special proposal moment.',
+    quote: '"Photography is a way of feeling, of touching, of loving. What you have caught on film is captured forever… it remembers little things, long after you have forgotten everything." – Aaron Siskind',
   },
   {
     id: 'family',
@@ -36,10 +37,10 @@ const PACKAGES = [
       'Scenic view location',
       '3 pax included',
       '12 professionally edited photos',
-      '15 days delivery',
     ],
+    description: 'Ideal for family portraits, reunions, or special occasions.',
+    quote: '"The best thing about a picture is that it never changes, even when the people in it do." – Andy Warhol',
   },
-  // Removed the 'flying' package from here
 ];
 
 export default function Packages() {
@@ -110,13 +111,20 @@ export default function Packages() {
                     <li key={i}>{b}</li>
                   ))}
                 </ul>
+                <p className="text-sm text-gray-700 mb-4">{pkg.description}</p>
+                {/* New: Display the quote */}
+                {pkg.quote && (
+                  <p className="text-xs italic text-gray-500 mt-2 text-center">
+                    {pkg.quote}
+                  </p>
+                )}
 
                 {/* INQUIRE NOW */}
                 <a
                   href={waLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-center bg-[#012D26] text-white py-2 rounded hover:bg-gray-800 transition"
+                  className="block text-center bg-[#012D26] text-white py-2 rounded hover:bg-gray-800 transition mt-4" // Added mt-4 for spacing
                 >
                   INQUIRE NOW
                 </a>
