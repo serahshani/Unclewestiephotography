@@ -1,7 +1,9 @@
+"use client";
+
 import Navbar from '../Components/navbar';
-import Image from 'next/image'; // For potential icons or background images
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaYoutube, FaTiktok } from 'react-icons/fa'; // Example icons
-import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa'; // Social media icons
+import Image from 'next/image';
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaYoutube, FaTiktok } from 'react-icons/fa';
+import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
 
 export default function ContactPage() {
   return (
@@ -11,10 +13,10 @@ export default function ContactPage() {
       {/* Hero Section for Contact */}
       <section className="relative w-full h-96 flex items-center justify-center text-white overflow-hidden">
         <Image
-          src="/Hero3.jpg" // Replace with your actual hero image path in /public
+          src="/Hero3.jpg"
           alt="Contact Us Background"
           fill={true}
-          className="object-cover object-center brightness-50" // Dim the image for text readability
+          className="object-cover object-center brightness-50"
           priority
         />
         <div className="relative z-10 text-center px-4">
@@ -37,17 +39,16 @@ export default function ContactPage() {
               <div className="space-y-6 text-lg text-gray-700">
                 <div className="flex items-center space-x-4">
                   <FaPhone className="text-[#012D26] text-2xl" />
-                  <span>+254791264173</span> {/* Your phone number */}
+                  <span>+254791264173</span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaWhatsapp className="text-[#012D26] text-2xl" />
-                  <span>+254791264173</span> {/* Your WhatsApp number */}
+                  <span>+254791264173</span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaEnvelope className="text-[#012D26] text-2xl" />
-                  <span>info@unclewestiee.com</span> {/* Your email */}
+                  <span>info@unclewestiee.com</span>
                 </div>
-                {/* --- Two Locations Separated --- */}
                 <div className="flex items-start space-x-4">
                   <FaMapMarkerAlt className="text-[#012D26] text-2xl mt-1" />
                   <span>
@@ -60,7 +61,6 @@ export default function ContactPage() {
                    Other branches: Maralal, Samburu, Kenya
                   </span>
                 </div>
-                {/* ----------------------------- */}
               </div>
               <div className="mt-8 text-center">
                 <h3 className="text-xl font-semibold text-[#012D26] mb-4">Follow Us</h3>
@@ -71,7 +71,6 @@ export default function ContactPage() {
                   <a href="https://www.facebook.com/p/Uncle_westiee-photography-100076434076242/" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">
                     <FaFacebook size={36} />
                   </a>
-                  {/* Add more social media links as needed */}
                   <a href="https://www.youtube.com/channel/UCaPJSHbeHHA5Wft0ywekl-A" target='_blank' rel='noopener noreferrer' className='text-gray-600 hover:text-red-600 transition-colors duration-300'>
                      <FaYoutube size={36}/>
                   </a>
@@ -143,9 +142,8 @@ export default function ContactPage() {
           <div className="mt-20">
             <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">Find Us on the Map</h2>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              {/* This map embed is for Ruiru, Kiambu. Consider adding a second map or a combined one for Maralal if desired. */}
               <iframe
-                src="https://maps.app.goo.gl/f16PpTcq9YnYcCaPA" // Example for Ruiru, Kenya - Update with actual embed code
+                src="https://maps.app.goo.gl/FUUE8kHYUuNo7zwo8"
                 width="100%"
                 height="450"
                 style={{ border: 0 }}

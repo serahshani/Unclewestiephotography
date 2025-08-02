@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   images: {
+    unoptimized: true, // Disable Next.js image optimization
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'i.ytimg.com',
+        hostname: 'i.ytImage.com',
         port: '',
         pathname: '/vi/**' // Allows any path under /vi/
       },

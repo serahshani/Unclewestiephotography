@@ -1,4 +1,4 @@
-"use client"; // <-- ADD THIS LINE AT THE VERY TOP
+"use client";
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -12,7 +12,6 @@ const links = [
   { href: '/services#services-section', label: 'SERVICES' },
   { href: '/portfolio', label: 'PORTFOLIO' },
   { href: '/packages#packages-section', label: 'PACKAGES' },
-  // Removed the 'INQUIRE NOW' link
   { href: '/contact', label: 'CONTACT' },
 ];
 
@@ -22,22 +21,11 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Check if window is defined to prevent errors during SSR
-      if (typeof window !== 'undefined') {
-        setScrolled(window.scrollY > 0);
-      }
+      setScrolled(window.scrollY > 0);
     };
 
-    // Only add event listener on the client side
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', handleScroll);
-    }
-
-    return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('scroll', handleScroll);
-      }
-    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -53,7 +41,7 @@ export default function Navbar() {
         <Link href="/" className="text-white font-extrabold tracking-tight flex items-center">
           <Image
             src='/Westieelogo.png'
-            alt='Uncle Westiee Studios Logo'
+            alt='Uncle Westiee Studios'
             width={60}
             height={20}
             priority
@@ -68,7 +56,7 @@ export default function Navbar() {
               <Link
                 href={href}
                 className="text-white text-sm font-medium uppercase tracking-wide hover:text-green-300 transition-colors duration-200"
-                scroll={false}
+                onClick={() => setIsOpen(false)} // Close menu if it's open (e.g. on small screen)
               >
                 {label}
               </Link>
@@ -112,8 +100,7 @@ export default function Navbar() {
                   <Link
                     href={href}
                     className="block text-white text-base font-medium uppercase tracking-wide hover:text-green-300 transition-colors duration-200"
-                    onClick={() => setIsOpen(false)}
-                    scroll={false}
+                    onClick={() => setIsOpen(false)} // Close the menu on link click
                   >
                     {label}
                   </Link>
