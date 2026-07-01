@@ -1,13 +1,9 @@
-import Navbar from '../Components/navbar';
-import Footer from '../Components/footer'; // Assuming you have a Footer component
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function AboutPage() {
   return (
     <>
-      <Navbar />
-
       {/* Hero Section: Our Passion */}
       <section className="relative w-full h-[60vh] flex items-center justify-center text-white overflow-hidden pt-20">
         <Image
@@ -116,8 +112,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      <Footer />
     </>
   );
 }

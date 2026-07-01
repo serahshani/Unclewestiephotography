@@ -1,27 +1,60 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com",
+  "style-src 'self' 'unsafe-inline' https://unpkg.com",
+  "img-src 'self' data: blob: https://i.ytimg.com https://ui-avatars.com",
+  "font-src 'self' data:",
+  "frame-src 'self' https://www.youtube.com https://www.google.com https://maps.google.com",
+  "connect-src 'self'",
+  "media-src 'self' https://www.youtube.com",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join('; ');
+
 const nextConfig = {
-  output: 'export',
   images: {
-    unoptimized: true, // Disable Next.js image optimization
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'i.ytImage.com',
+        hostname: 'i.ytimg.com',
         port: '',
-        pathname: '/vi/**' // Allows any path under /vi/
+        pathname: '/vi/**',
       },
- ] },
-  // Add any other Next.js configurations here if you have them
-  // For example, if you're using the new app directory:
-  // experimental: {
-  //   appDir: true,
-  // },
+      {
+        protocol: 'https',
+        hostname: 'ui-avatars.com',
+        port: '',
+        pathname: '/api/**',
+      },
+    ],
+  },
+  async headers() {
+    const securityHeaders = [
+      { key: 'X-Frame-Options', value: 'DENY' },
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      {
+        key: 'Permissions-Policy',
+        value: 'camera=(), microphone=(), geolocation=()',
+      },
+      { key: 'Content-Security-Policy', value: csp },
+      { key: 'X-DNS-Prefetch-Control', value: 'on' },
+    ];
+
+    if (isProd) {
+      securityHeaders.push({
+        key: 'Strict-Transport-Security',
+        value: 'max-age=63072000; includeSubDomains; preload',
+      });
+    }
+
+    return [{ source: '/(.*)', headers: securityHeaders }];
+  },
 };
 
-// Use 'export default' for ES module syntax (common in newer Next.js setups or when "type": "module" is in package.json)
 export default nextConfig;
-
-// If your project explicitly uses CommonJS modules (less common in modern Next.js setups),
-// you would use:
-// module.exports = nextConfig;
-// But based on your error, 'export default' is what you need.

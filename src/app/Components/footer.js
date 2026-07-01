@@ -1,50 +1,81 @@
 import Link from 'next/link';
-// Import Image component for optimized logos
 import Image from 'next/image';
 import { Facebook, Instagram, Mail, ChevronUp } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
+import { CONTACT, NAV_LINKS, SOCIAL } from '@/lib/site-config';
 
 export default function Footer() {
   return (
-    <footer className="bg-white text-black py-12 px-4 text-center">
-      <div className="max-w-2xl mx-auto">
-        {/* Logo & Title */}
-        <div className="mb-6">
-          {/* Replaced text-based UW with Next.js Image component */}
-          <Link href="/" className="inline-block" aria-label="Home"> {/* Wrap logo in Link to go home */}
-            <Image
-              src='/Uncle-westiee.png' // Path to your logo image in the public folder
-              alt='Uncle Westiee Studios Logo'
-              width={60} // Adjust width as needed for your logo's size in the footer
-              height={20} // Adjust height to maintain aspect ratio
-              className="object-contain" // Ensures the logo fits within the given dimensions
-            />
-          </Link>
-          <h2 className="text-3xl font-serif font-bold text-green-900 mt-2">Uncle Westiee</h2> {/* Adjusted margin top */}
-          <p className="text-sm tracking-widest text-green-900">Studios</p>
+    <footer className="bg-white text-black py-12 px-4 border-t border-gray-100">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10 text-center md:text-left">
+          <div>
+            <Link href="/" className="inline-block" aria-label="Home">
+              <Image
+                src="/Uncle-westiee.png"
+                alt="Uncle Westiee Studios Logo"
+                width={60}
+                height={20}
+                className="object-contain mx-auto md:mx-0"
+              />
+            </Link>
+            <h2 className="text-xl font-serif font-bold text-green-900 mt-3">
+              Uncle Westiee Studios
+            </h2>
+            <p className="text-sm text-gray-600 mt-2">
+              Photography &amp; videography in Kenya
+            </p>
+          </div>
+
+          <nav aria-label="Footer navigation">
+            <h3 className="font-semibold text-[#012D26] mb-4">Explore</h3>
+            <ul className="space-y-2">
+              {NAV_LINKS.map(({ href, label }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className="text-gray-600 hover:text-[#012D26] transition-colors"
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div>
+            <h3 className="font-semibold text-[#012D26] mb-4">Contact</h3>
+            <p className="text-gray-600 text-sm mb-2">{CONTACT.location}</p>
+            <a
+              href={`mailto:${CONTACT.email}`}
+              className="text-gray-600 hover:text-[#012D26] text-sm block mb-2"
+            >
+              {CONTACT.email}
+            </a>
+            <a
+              href={`tel:${CONTACT.phone}`}
+              className="text-gray-600 hover:text-[#012D26] text-sm block"
+            >
+              {CONTACT.phone}
+            </a>
+          </div>
         </div>
 
-        {/* Tagline */}
-        <p className="text-black mb-8">
-          Feel free to contact us and follow on social media
-        </p>
-
-        {/* Social Icons */}
-        <div className="flex justify-items-start justify-center space-x-10 text-green-950">
-          <Link href="https://www.facebook.com/p/Uncle_westiee-photography-100076434076242/" target="_blank" aria-label="Facebook">
-            <Facebook size={28} className="hover:text-gray-700" />
+        <div className="flex justify-center space-x-8 text-green-950 border-t border-gray-100 pt-8">
+          <Link href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <Facebook size={24} className="hover:text-gray-700" />
           </Link>
-          <Link href="https://www.instagram.com/uncle_westiee_studios/?hl=en" target="_blank" aria-label="Instagram">
-            <Instagram size={28} className="hover:text-gray-700" />
+          <Link href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <Instagram size={24} className="hover:text-gray-700" />
           </Link>
-          <Link href="mailto:info@unclywestieestudios.co.ke" aria-label="Email">
-            <Mail size={28} className="hover:text-gray-700" />
+          <Link href={`mailto:${CONTACT.email}`} aria-label="Email">
+            <Mail size={24} className="hover:text-gray-700" />
           </Link>
-          <Link href="https://wa.me/+254791264173" target="_blank" aria-label="WhatsApp">
-            <FaWhatsapp size={28} className="hover:text-black" />
+          <Link href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+            <FaWhatsapp size={24} className="hover:text-black" />
           </Link>
-          <Link href="#top" aria-label="Back to top">
-            <ChevronUp size={28} className="hover:text-gray-700" />
+          <Link href="#main-content" aria-label="Back to top">
+            <ChevronUp size={24} className="hover:text-gray-700" />
           </Link>
         </div>
       </div>

@@ -2,34 +2,26 @@
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
-import Image from 'next/image'; // Import the Next.js Image component
-import Link from 'next/link'; // Import Link for proper Next.js navigation
+import Image from 'next/image';
+import Link from 'next/link';
 
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-const portfolioImages = [
-  {
-    src: '/Gallery1.jpg', // Local image in the public folder
-    alt: 'University Campus',
-  },
-  {
-    src: '/Gallery2.jpg', // Local image in the public folder
-    alt: 'Beautiful Landscape with Mountains',
-  },
-  {
-    src: '/Gallery3.jpg', // Local image in the public folder
-    alt: 'Professional Studios Setup',
-  },
-  {
-    src: '/Gallery4.jpg', // Local image in the public folder
-    alt: 'Stunning Aurora Borealis',
-  },
-  // Add more images as needed
+const defaultImages = [
+  { src: '/Gallery1.jpg', alt: 'University Campus' },
+  { src: '/Gallery2.jpg', alt: 'Beautiful Landscape with Mountains' },
+  { src: '/Gallery3.jpg', alt: 'Professional Studios Setup' },
+  { src: '/Gallery4.jpg', alt: 'Stunning Aurora Borealis' },
 ];
 
-export default function PortfolioCarousel() {
+interface PortfolioCarouselProps {
+  images?: { src: string; alt: string }[];
+}
+
+export default function PortfolioCarousel({ images }: PortfolioCarouselProps) {
+  const portfolioImages = images && images.length > 0 ? images : defaultImages;
+
   return (
     <section className="bg-gray-200 py-16 px-4 text-center">
       <h2 className="text-3xl font-serif font-semibold mb-10 text-gray-800">
@@ -52,9 +44,10 @@ export default function PortfolioCarousel() {
                   src={image.src}
                   alt={image.alt}
                   quality={80}
-                  priority={idx === 0} // Prioritize loading the first image
-                  fill={true} // Replaces 'layout="fill"' for Next.js 13+
-                  className="object-cover" // Replaces 'objectFit="cover"' for Next.js 13+
+                  priority={idx === 0}
+                  fill={true}
+                  sizes="(max-width: 768px) 100vw, 768px"
+                  className="object-cover"
                 />
               </div>
             </SwiperSlide>
@@ -62,8 +55,7 @@ export default function PortfolioCarousel() {
         </Swiper>
       </div>
       <Link
-        href="/portfolio" // Assuming your PortfolioPage is at /portfolio route
-        passHref
+        href="/portfolio"
         className="mt-10 inline-block bg-green-900 text-white font-serif px-8 py-3 rounded-lg shadow-md hover:bg-green-700 transition-colors duration-300 transform hover:-translate-y-1"
       >
         View Full Gallery

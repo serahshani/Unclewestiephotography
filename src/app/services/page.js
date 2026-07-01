@@ -1,14 +1,10 @@
-import Navbar from '../Components/navbar';
-import Footer from '../Components/footer';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Camera, Heart, Briefcase, Film, Users, Sparkles, Satellite } from 'lucide-react'; // Added Drone icon
+import { Camera, Heart, Briefcase, Film, Users, Sparkles, Satellite } from 'lucide-react';
 
 export default function ServicesPage() {
   return (
     <>
-      <Navbar />
-
       {/* Hero Section: Our Services */}
       <section className="relative w-full h-[600px] flex items-center justify-center text-white overflow-hidden pt-50">
         <Image
@@ -192,7 +188,6 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <Footer />
     </>
   );
 }

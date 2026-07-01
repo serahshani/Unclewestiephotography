@@ -7,7 +7,7 @@ export default function AboutPage() {
 
       {/* Personal Bio Section */}
       <section id="about" className="py-16 px-4 bg-white">
-        <h1 className="text-4xl font-serif text-center text-[#012D26] mb-12">About me</h1>
+        <h2 className="text-4xl font-serif text-center text-[#012D26] mb-12">About me</h2>
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:space-x-12">
           {/* Photo */}
           <div className="w-full md:w-1/2 mb-8 md:mb-0">

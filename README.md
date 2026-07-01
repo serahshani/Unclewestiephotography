@@ -1,36 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Uncle Westiee Studios CMS
 
-## Getting Started
+Next.js 15 full-stack CMS for Uncle Westiee Studios — photography and videography portfolio with an admin dashboard, MySQL database, and JWT authentication.
 
-First, run the development server:
+## Quick start
 
 ```bash
+npm install
+cp .env.example .env   # configure database and admin credentials
+npm run db:deploy
+npm run db:seed
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Website:** http://localhost:3000  
+- **Admin:** http://localhost:3000/admin/login  
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Description |
+|----------|-------------|
+| `DB_CONNECTION` | Database driver (`mysql`) |
+| `DB_HOST` | MySQL host |
+| `DB_PORT` | MySQL port |
+| `DB_DATABASE` | Database name |
+| `DB_USERNAME` | Database user |
+| `DB_PASSWORD` | Database password |
+| `JWT_SECRET` | Secret for signing admin JWT tokens |
+| `ADMIN_USERNAME` | Admin login username (seeded) |
+| `ADMIN_PASSWORD` | Admin login password (seeded) |
+| `NEXT_PUBLIC_SITE_URL` | Public site URL (SEO, sitemap, OG) |
+| `TRUST_PROXY` | Set `true` behind nginx/Apache |
+| `REDIS_URL` | Optional — shared rate limiting / token revocation |
 
-## Learn More
+## Database commands
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run db:deploy   # apply migrations
+npm run db:seed     # seed admin, hero, gallery, videos
+npm run db:studio   # Prisma Studio GUI
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API documentation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Interactive Swagger UI (requires admin login):
 
-## Deploy on Vercel
+- **UI:** `/api/docs` (open in browser while signed in)
+- **OpenAPI JSON:** `GET /api/docs` with `Accept: application/json`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Authentication
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Protected routes use:
+
+- **Cookie:** `admin_token` (httpOnly JWT, 8h expiry)
+- **Header:** `X-CSRF-Token` (must match `csrf_token` cookie on POST/PUT/PATCH/DELETE)
+
+Login first via `POST /api/auth/login`, then include the CSRF header on mutating requests.
+
+### Auth
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/auth/login` | Public | Admin login. Body: `{ "username", "password" }` |
+| `POST` | `/api/auth/logout` | CSRF | Log out and revoke session |
+| `GET` | `/api/auth/me` | Cookie | Current session info |
+
+### Hero
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `GET` | `/api/hero` | Public / Admin | Published hero. `?preview=true` returns draft (admin only) |
+| `PUT` | `/api/hero` | Admin + CSRF | Update draft hero fields |
+| `POST` | `/api/hero/publish` | Admin + CSRF | Publish draft hero and slides |
+| `GET` | `/api/hero/slides` | Public / Admin | List slides. `?preview=true` includes drafts (admin) |
+| `POST` | `/api/hero/slides` | Admin + CSRF | Create slide |
+| `PUT` | `/api/hero/slides` | Admin + CSRF | Reorder slides. Body: `[{ "id", "sortOrder" }]` |
+| `GET` | `/api/hero/slides/[id]` | Public | Get single published slide |
+| `PUT` | `/api/hero/slides/[id]` | Admin + CSRF | Update slide |
+| `DELETE` | `/api/hero/slides/[id]` | Admin + CSRF | Delete slide |
+
+### Gallery
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `GET` | `/api/gallery` | Public | List images. Query: `category`, `featured` |
+| `POST` | `/api/gallery` | Admin + CSRF | Create image |
+| `GET` | `/api/gallery/[id]` | Admin | Get image by ID |
+| `PUT` | `/api/gallery/[id]` | Admin + CSRF | Update image |
+| `DELETE` | `/api/gallery/[id]` | Admin + CSRF | Delete image |
+
+### Videos
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `GET` | `/api/videos` | Public | List videos. Query: `category` |
+| `POST` | `/api/videos` | Admin + CSRF | Add YouTube video |
+| `GET` | `/api/videos/[id]` | Admin | Get video by ID |
+| `PUT` | `/api/videos/[id]` | Admin + CSRF | Update video |
+| `DELETE` | `/api/videos/[id]` | Admin + CSRF | Delete video |
+
+### Upload
+
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| `POST` | `/api/upload` | Admin + CSRF | Upload image (`multipart/form-data`: `file`, `type` = `hero` \| `gallery`) |
+
+Uploaded files are stored under `public/uploads/{hero|gallery}/`.
+
+### Example: login + authenticated request
+
+```bash
+# Login (sets cookies)
+curl -c cookies.txt -X POST http://localhost:3000/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username":"unclewestieestudios","password":"YOUR_PASSWORD"}'
+
+# Read CSRF token from cookies.txt, then:
+curl -b cookies.txt -X GET http://localhost:3000/api/auth/me \
+  -H "X-CSRF-Token: YOUR_CSRF_TOKEN"
+```
+
+## Production
+
+```bash
+npm run build
+npm run start
+```
+
+Ensure MySQL is running, migrations are deployed, and `NEXT_PUBLIC_SITE_URL` points to your live domain.

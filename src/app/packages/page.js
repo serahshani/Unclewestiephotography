@@ -1,5 +1,3 @@
-import Navbar from '../Components/navbar';
-import Footer from '../Components/footer';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react'; // Icon for features
@@ -67,8 +65,6 @@ export default function PackagesPage() {
 
   return (
     <>
-      <Navbar />
-
       {/* Hero Section: Our Packages */}
       <section className="relative w-full h-[60vh] flex items-center justify-center text-white overflow-hidden pt-20">
         <Image
@@ -167,7 +163,6 @@ export default function PackagesPage() {
         </div>
       </section>
 
-      <Footer />
     </>
   );
 }

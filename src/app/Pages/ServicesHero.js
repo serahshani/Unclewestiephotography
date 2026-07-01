@@ -10,6 +10,7 @@ export default function ServicesHero() {
           src="/Services-hero.jpg"        // ← put your bride image here in /public/images
           alt="Wedding Studios"
           fill
+          sizes="100vw"
           // On mobile, center the object for better visibility. On larger screens, keep it right.
           className="object-cover object-center sm:object-right"
           priority

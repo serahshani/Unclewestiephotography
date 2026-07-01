@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model HeroSection {
+  id                   String      @id @default(cuid())
+  title                String
+  subtitle             String?
+  description          String?     @db.Text
+  ctaText              String?
+  ctaUrl               String?
+  typewriterWords      Json?
+  logoPath             String?
+  draftTitle           String?
+  draftSubtitle        String?
+  draftDescription     String?     @db.Text
+  draftCtaText         String?
+  draftCtaUrl          String?
+  draftTypewriterWords Json?
+  draftLogoPath        String?
+  slides               HeroSlide[]
+  updatedAt            DateTime    @updatedAt
+}
+
+model HeroSlide {
+  id            String      @id @default(cuid())
+  heroSectionId String
+  heroSection   HeroSection @relation(fields: [heroSectionId], references: [id], onDelete: Cascade)
+  imagePath     String
+  altText       String
+  sortOrder     Int         @default(0)
+  isDraft       Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+
+  @@index([heroSectionId, sortOrder])
+}
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  imagePath   String
+  altText     String
+  slug        String   @unique
+  category    String?
+  sortOrder   Int      @default(0)
+  featured    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([featured, sortOrder])
+}
+
+model Video {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  youtubeUrl  String
+  youtubeId   String
+  category    String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([youtubeId])
+}
+
+model WebsiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value Json
+}

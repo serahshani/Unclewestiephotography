@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from '../Components/navbar';
 import Image from 'next/image';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaYoutube, FaTiktok } from 'react-icons/fa';
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
@@ -8,8 +7,6 @@ import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
 export default function ContactPage() {
   return (
     <>
-      <Navbar />
-
       {/* Hero Section for Contact */}
       <section className="relative w-full h-96 flex items-center justify-center text-white overflow-hidden">
         <Image
@@ -18,6 +15,7 @@ export default function ContactPage() {
           fill={true}
           className="object-cover object-center brightness-50"
           priority
+          sizes="100vw"
         />
         <div className="relative z-10 text-center px-4">
           <h1 className="text-6xl md:text-7xl font-extrabold mb-4 animate-fade-in-up">
@@ -47,7 +45,7 @@ export default function ContactPage() {
                 </div>
                 <div className="flex items-center space-x-4">
                   <FaEnvelope className="text-[#012D26] text-2xl" />
-                  <span>info@unclewestiee.com</span>
+                  <span>info@unclewestieestudios.co.ke</span>
                 </div>
                 <div className="flex items-start space-x-4">
                   <FaMapMarkerAlt className="text-[#012D26] text-2xl mt-1" />
@@ -143,7 +141,8 @@ export default function ContactPage() {
             <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">Find Us on the Map</h2>
             <div className="bg-white rounded-xl shadow-lg overflow-hidden">
               <iframe
-                src="https://maps.app.goo.gl/FUUE8kHYUuNo7zwo8"
+                title="Uncle Westiee Studios location on Google Maps"
+                src="https://maps.google.com/maps?q=Uncle+Westiee+Studios,Nairobi,Kenya&hl=en&z=14&output=embed"
                 width="100%"
                 height="450"
                 style={{ border: 0 }}
