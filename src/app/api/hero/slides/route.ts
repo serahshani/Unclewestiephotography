@@ -5,6 +5,22 @@ import { heroSlideSchema, heroSlideReorderSchema } from '@/lib/validators';
 import { revalidatePublicContent } from '@/lib/revalidate';
 import { jsonError, jsonSuccess } from '@/lib/api-utils';
 import { resolveHeroSlides } from '@/lib/media-fallback';
+import { DEFAULT_HERO_SLIDES } from '@/lib/default-content';
+
+async function ensureDefaultSlidesInDb(heroId: string) {
+  const count = await prisma.heroSlide.count({ where: { heroSectionId: heroId } });
+  if (count > 0) return;
+
+  await prisma.heroSlide.createMany({
+    data: DEFAULT_HERO_SLIDES.map((slide) => ({
+      heroSectionId: heroId,
+      imagePath: slide.imagePath,
+      altText: slide.altText,
+      sortOrder: slide.sortOrder,
+      isDraft: true,
+    })),
+  });
+}
 
 async function getHeroId(): Promise<string> {
   let hero = await prisma.heroSection.findFirst();
@@ -58,6 +74,8 @@ export async function POST(request: NextRequest) {
   }
 
   const heroId = await getHeroId();
+  await ensureDefaultSlidesInDb(heroId);
+
   const maxOrder = await prisma.heroSlide.aggregate({
     where: { heroSectionId: heroId },
     _max: { sortOrder: true },

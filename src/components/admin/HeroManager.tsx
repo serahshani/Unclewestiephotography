@@ -95,6 +95,11 @@ function LogoPreview({
   );
 }
 
+function stripLogoQuery(path: string | null | undefined): string | null {
+  if (!path) return null;
+  return path.split('?')[0] || null;
+}
+
 export default function HeroManager() {
   const { showToast, Toast } = useToast();
   const [hero, setHero] = useState<HeroData | null>(null);
@@ -133,21 +138,25 @@ export default function HeroManager() {
     if (!options?.silent) setSaving(true);
     try {
       const typewriterWords = parseTypewriterWords(typewriterInput);
+      const logoPath = stripLogoQuery(logoPreviewSrc ?? hero.logoPath);
+      const payload: Record<string, unknown> = {
+        draftTitle: typewriterWords.join(' ') || hero.title,
+        draftSubtitle: hero.subtitle,
+        draftDescription: hero.description,
+        draftCtaText: hero.ctaText,
+        draftCtaUrl: hero.ctaUrl,
+        draftTypewriterWords: typewriterWords,
+      };
+      if (logoPath) {
+        payload.draftLogoPath = logoPath;
+      }
       const data = await apiFetch<HeroData>('/api/hero', {
         method: 'PUT',
-        body: JSON.stringify({
-          draftTitle: typewriterWords.join(' ') || hero.title,
-          draftSubtitle: hero.subtitle,
-          draftDescription: hero.description,
-          draftCtaText: hero.ctaText,
-          draftCtaUrl: hero.ctaUrl,
-          draftTypewriterWords: typewriterWords,
-          draftLogoPath: hero.logoPath,
-        }),
+        body: JSON.stringify(payload),
       });
       setHero(data);
       setTypewriterInput(data.typewriterWords.join(', '));
-      setLogoPreviewSrc(data.logoPath);
+      setLogoPreviewSrc(logoPath ?? data.logoPath);
       if (!options?.silent) notify('Draft saved');
       return true;
     } catch (err) {
@@ -178,31 +187,42 @@ export default function HeroManager() {
   }
 
   async function handleSlideUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const sizeError = validateHeroImage(file);
-    if (sizeError) {
-      notify(sizeError, 'error');
-      e.target.value = '';
-      return;
+    const files = e.target.files;
+    if (!files?.length) return;
+
+    let added = 0;
+    let lastSlideId: string | null = null;
+
+    for (const file of Array.from(files)) {
+      const sizeError = validateHeroImage(file);
+      if (sizeError) {
+        notify(sizeError, 'error');
+        continue;
+      }
+      try {
+        const { imagePath } = await uploadFile(file, 'hero');
+        const slide = await apiFetch<{ id: string }>('/api/hero/slides', {
+          method: 'POST',
+          body: JSON.stringify({
+            imagePath,
+            altText: file.name.replace(/\.[^.]+$/, ''),
+            isDraft: true,
+          }),
+        });
+        added += 1;
+        lastSlideId = slide.id;
+      } catch (err) {
+        notify(err instanceof Error ? err.message : 'Upload failed', 'error');
+      }
     }
-    try {
-      const { imagePath } = await uploadFile(file, 'hero');
-      const slide = await apiFetch<{ id: string }>('/api/hero/slides', {
-        method: 'POST',
-        body: JSON.stringify({
-          imagePath,
-          altText: file.name.replace(/\.[^.]+$/, ''),
-          isDraft: true,
-        }),
-      });
-      await loadHero();
-      setSelectedSlideId(slide.id);
-      notify('Slide added');
-    } catch (err) {
-      notify(err instanceof Error ? err.message : 'Upload failed', 'error');
-    }
+
     e.target.value = '';
+
+    if (added > 0) {
+      await loadHero();
+      if (lastSlideId) setSelectedSlideId(lastSlideId);
+      notify(added === 1 ? 'Slide added' : `${added} slides added`);
+    }
   }
 
   async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -418,7 +438,7 @@ export default function HeroManager() {
             <label className="inline-flex cursor-pointer items-center justify-center gap-2 self-start rounded-lg bg-[#012D26] px-4 py-2.5 text-sm font-medium text-white hover:bg-green-900">
               <Upload size={14} />
               Add slide
-              <input type="file" accept="image/*" onChange={handleSlideUpload} className="hidden" />
+              <input type="file" accept="image/*" multiple onChange={handleSlideUpload} className="hidden" />
             </label>
           </div>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">

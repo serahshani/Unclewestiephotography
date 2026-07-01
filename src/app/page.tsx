@@ -12,7 +12,7 @@ import { getSiteUrl } from '@/lib/api-utils';
 import { organizationSchema, websiteSchema, webPageSchema } from '@/lib/seo/schemas';
 import { createPageMetadata } from '@/lib/seo/metadata';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = createPageMetadata({
   title: 'Kenya Photography & Videography',
