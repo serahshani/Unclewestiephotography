@@ -54,7 +54,7 @@ export default async function Home() {
           altText: s.altText,
         }))}
         typewriterWords={hero.typewriterWords}
-        logoPath={hero.logoPath ?? '/Hero4.png'}
+        logoPath={hero.logoPath}
         ctaText={hero.ctaText}
         ctaUrl={hero.ctaUrl}
         seoTitle={heroTitle}

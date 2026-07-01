@@ -29,7 +29,7 @@ export function useToast(durationMs = 5000) {
     <div
       role="alert"
       aria-live="assertive"
-      className={`fixed top-4 right-4 z-[100] flex max-w-sm items-start gap-3 rounded-lg px-4 py-3 text-sm text-white shadow-lg ${
+      className={`fixed top-4 left-4 right-4 z-[100] flex items-start gap-3 rounded-lg px-4 py-3 text-sm text-white shadow-lg sm:left-auto sm:max-w-sm ${
         toast.type === 'error' ? 'bg-red-600' : 'bg-green-700'
       }`}
     >

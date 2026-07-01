@@ -3,6 +3,9 @@ import { getSessionFromRequest, validateCsrf } from '@/lib/auth';
 import { processAndSaveImage, UploadType } from '@/lib/upload';
 import { jsonError, jsonSuccess } from '@/lib/api-utils';
 
+export const maxDuration = 120;
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
   const session = await getSessionFromRequest(request);
   if (!session) return jsonError('Unauthorized', 401);

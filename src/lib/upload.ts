@@ -3,9 +3,15 @@ import path from 'path';
 import slugify from 'slugify';
 import { fileTypeFromBuffer } from 'file-type';
 
+import {
+  MAX_GALLERY_SIZE_BYTES,
+  MAX_HERO_SIZE_BYTES,
+  formatMaxHeroSizeLabel,
+} from '@/lib/upload-limits';
+
 const ALLOWED_MIME = new Set(['image/jpeg', 'image/png', 'image/webp']);
-const MAX_HERO_SIZE = 5 * 1024 * 1024;
-const MAX_GALLERY_SIZE = 10 * 1024 * 1024;
+const MAX_HERO_SIZE = MAX_HERO_SIZE_BYTES;
+const MAX_GALLERY_SIZE = MAX_GALLERY_SIZE_BYTES;
 
 const UPLOAD_PATH_REGEX = /^\/uploads\/(hero|gallery)\/[a-zA-Z0-9._-]+\.webp$/;
 const LEGACY_PUBLIC_PATH_REGEX = /^\/[A-Za-z0-9._-]+\.(jpg|jpeg|png|webp|gif)$/i;
@@ -39,7 +45,7 @@ export async function processAndSaveImage(
   const maxSize = type === 'hero' ? MAX_HERO_SIZE : MAX_GALLERY_SIZE;
   if (file.size > maxSize) {
     throw new Error(
-      `File too large. Maximum size is ${type === 'hero' ? '5MB' : '10MB'}`
+      `File too large. Maximum size is ${type === 'hero' ? formatMaxHeroSizeLabel() : '10MB'}`
     );
   }
 

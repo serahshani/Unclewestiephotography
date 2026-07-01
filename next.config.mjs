@@ -17,6 +17,11 @@ const csp = [
 ].join('; ');
 
 const nextConfig = {
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '50mb',
+    },
+  },
   images: {
     remotePatterns: [
       {

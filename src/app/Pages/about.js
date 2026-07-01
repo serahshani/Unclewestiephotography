@@ -12,7 +12,7 @@ export default function AboutPage() {
           {/* Photo */}
           <div className="w-full md:w-1/2 mb-8 md:mb-0">
             <Image
-              src="/Westiee-about.jpeg"  // ← replace with your actual image path
+              src="/Westiee-about.jpeg"  
               alt="Westiee Studios"
               width={600}
               height={800}

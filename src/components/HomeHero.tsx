@@ -15,7 +15,7 @@ interface HeroSlide {
 interface HomeHeroProps {
   slides: HeroSlide[];
   typewriterWords: string[];
-  logoPath: string;
+  logoPath?: string | null;
   ctaText?: string | null;
   ctaUrl?: string | null;
   seoTitle: string;
@@ -86,13 +86,15 @@ export default function HomeHero({
           animate="visible"
           className="mb-4"
         >
-          <Image
-            src={logoPath}
-            alt="Uncle Westiee Studios logo"
-            width={300}
-            height={300}
-            priority
-          />
+          {logoPath ? (
+            <Image
+              src={logoPath}
+              alt="Uncle Westiee Studios logo"
+              width={300}
+              height={300}
+              priority
+            />
+          ) : null}
         </motion.div>
 
         <h1 className="sr-only">{seoTitle}</h1>

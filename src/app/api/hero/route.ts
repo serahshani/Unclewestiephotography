@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { getSessionFromRequest, validateCsrf } from '@/lib/auth';
 import { heroUpdateSchema } from '@/lib/validators';
 import { jsonError, jsonSuccess } from '@/lib/api-utils';
-import { resolvePublishedHero } from '@/lib/media-fallback';
+import { resolveDraftHero, resolvePublishedHero } from '@/lib/media-fallback';
 
 async function getOrCreateHero() {
   let hero = await prisma.heroSection.findFirst({
@@ -28,38 +28,12 @@ async function getOrCreateHero() {
   return hero;
 }
 
-function formatPublishedHero(hero: Awaited<ReturnType<typeof getOrCreateHero>>) {
-  return {
-    title: hero.title,
-    subtitle: hero.subtitle,
-    description: hero.description,
-    ctaText: hero.ctaText,
-    ctaUrl: hero.ctaUrl,
-    typewriterWords: (hero.typewriterWords as string[]) ?? [],
-    logoPath: hero.logoPath,
-    slides: hero.slides.filter((s) => !s.isDraft),
-  };
-}
-
 async function formatPublicHero(hero: Awaited<ReturnType<typeof getOrCreateHero>>) {
   return resolvePublishedHero(hero);
 }
 
-function formatDraftHero(hero: Awaited<ReturnType<typeof getOrCreateHero>>) {
-  return {
-    title: hero.draftTitle ?? hero.title,
-    subtitle: hero.draftSubtitle ?? hero.subtitle,
-    description: hero.draftDescription ?? hero.description,
-    ctaText: hero.draftCtaText ?? hero.ctaText,
-    ctaUrl: hero.draftCtaUrl ?? hero.ctaUrl,
-    typewriterWords:
-      (hero.draftTypewriterWords as string[]) ??
-      (hero.typewriterWords as string[]) ??
-      [],
-    logoPath: hero.draftLogoPath ?? hero.logoPath,
-    slides: hero.slides,
-    published: formatPublishedHero(hero),
-  };
+async function formatDraftHero(hero: Awaited<ReturnType<typeof getOrCreateHero>>) {
+  return resolveDraftHero(hero);
 }
 
 export async function GET(request: NextRequest) {
@@ -69,7 +43,7 @@ export async function GET(request: NextRequest) {
   if (preview) {
     const session = await getSessionFromRequest(request);
     if (!session) return jsonError('Unauthorized', 401);
-    return jsonSuccess(formatDraftHero(hero));
+    return jsonSuccess(await formatDraftHero(hero));
   }
 
   return jsonSuccess(await formatPublicHero(hero));
@@ -115,5 +89,5 @@ export async function PUT(request: NextRequest) {
     include: { slides: { orderBy: { sortOrder: 'asc' } } },
   });
 
-  return jsonSuccess(formatDraftHero(updated));
+  return jsonSuccess(await formatDraftHero(updated));
 }

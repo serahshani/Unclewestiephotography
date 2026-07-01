@@ -66,11 +66,29 @@ function getDefaultHeroSlideAt(index: number) {
   return slides[index % slides.length];
 }
 
-export async function resolveLogoPath(logoPath: string | null | undefined): Promise<string> {
-  const candidate = logoPath ?? DEFAULT_LOGO_PATH;
-  if (await publicImageExists(candidate)) return candidate;
-  return DEFAULT_LOGO_PATH;
+export async function resolveLogoPath(logoPath: string | null | undefined): Promise<string | null> {
+  if (logoPath?.startsWith('/uploads/') && isSafeUploadImagePath(logoPath)) {
+    if (await publicImageExists(logoPath)) return logoPath;
+    return null;
+  }
+  if (logoPath && (await publicImageExists(logoPath))) return logoPath;
+  if (await publicImageExists(DEFAULT_LOGO_PATH)) return DEFAULT_LOGO_PATH;
+  return null;
 }
+
+function isSafeUploadImagePath(imagePath: string): boolean {
+  return /^\/uploads\/(hero|gallery)\/[a-zA-Z0-9._-]+\.webp$/.test(imagePath);
+}
+
+type HeroSlideRecord = {
+  id: string;
+  imagePath: string;
+  altText: string;
+  sortOrder: number;
+  isDraft: boolean;
+  heroSectionId: string;
+  createdAt: Date;
+};
 
 type HeroSectionRecord = {
   id: string;
@@ -81,8 +99,29 @@ type HeroSectionRecord = {
   ctaUrl: string | null;
   typewriterWords: unknown;
   logoPath: string | null;
-  slides: { id: string; imagePath: string; altText: string; sortOrder: number; isDraft: boolean; heroSectionId: string; createdAt: Date }[];
+  draftTitle?: string | null;
+  draftSubtitle?: string | null;
+  draftDescription?: string | null;
+  draftCtaText?: string | null;
+  draftCtaUrl?: string | null;
+  draftTypewriterWords?: unknown;
+  draftLogoPath?: string | null;
+  slides: HeroSlideRecord[];
 };
+
+function pickTypewriterWords(value: unknown, fallback: string[]): string[] {
+  return Array.isArray(value) && value.length > 0 ? (value as string[]) : fallback;
+}
+
+function formatHeroSlides(slides: (HeroSlideRecord | DefaultHeroSlide)[]) {
+  return slides.map((slide) => ({
+    id: slide.id,
+    imagePath: slide.imagePath,
+    altText: slide.altText,
+    sortOrder: slide.sortOrder,
+    isDraft: 'isDraft' in slide ? slide.isDraft : false,
+  }));
+}
 
 export async function resolvePublishedHero(hero: HeroSectionRecord | null) {
   if (!hero) return getDefaultPublishedHero();
@@ -93,16 +132,54 @@ export async function resolvePublishedHero(hero: HeroSectionRecord | null) {
 
   return {
     title: hero.title || DEFAULT_HERO_META.title,
-    subtitle: hero.subtitle,
-    description: hero.description,
-    ctaText: hero.ctaText,
-    ctaUrl: hero.ctaUrl,
-    typewriterWords:
-      (Array.isArray(hero.typewriterWords) && hero.typewriterWords.length > 0
-        ? (hero.typewriterWords as string[])
-        : DEFAULT_TYPEWRITER_WORDS),
+    subtitle: hero.subtitle ?? DEFAULT_HERO_META.subtitle,
+    description: hero.description ?? DEFAULT_HERO_META.description,
+    ctaText: hero.ctaText ?? DEFAULT_HERO_META.ctaText,
+    ctaUrl: hero.ctaUrl ?? DEFAULT_HERO_META.ctaUrl,
+    typewriterWords: pickTypewriterWords(hero.typewriterWords, [...DEFAULT_TYPEWRITER_WORDS]),
     logoPath,
     slides,
+  };
+}
+
+export async function resolveDraftHero(hero: HeroSectionRecord) {
+  const published = await resolvePublishedHero(hero);
+  const logoPath = await resolveLogoPath(hero.draftLogoPath ?? hero.logoPath);
+
+  let slides: (HeroSlideRecord | DefaultHeroSlide)[];
+  if (hero.slides.length > 0) {
+    const resolved = await resolveHeroSlides(hero.slides, hero.id);
+    slides = hero.slides.map((slide, index) => ({
+      ...slide,
+      imagePath: resolved[index]?.imagePath ?? slide.imagePath,
+      altText: resolved[index]?.altText ?? slide.altText,
+    }));
+  } else {
+    slides = published.slides;
+  }
+
+  return {
+    title: hero.draftTitle || published.title,
+    subtitle: hero.draftSubtitle ?? hero.subtitle ?? published.subtitle,
+    description: hero.draftDescription ?? hero.description ?? published.description,
+    ctaText: hero.draftCtaText ?? hero.ctaText ?? published.ctaText,
+    ctaUrl: hero.draftCtaUrl ?? hero.ctaUrl ?? published.ctaUrl,
+    typewriterWords: pickTypewriterWords(
+      hero.draftTypewriterWords ?? hero.typewriterWords,
+      published.typewriterWords
+    ),
+    logoPath,
+    slides: formatHeroSlides(slides),
+    published: {
+      title: published.title,
+      subtitle: published.subtitle,
+      description: published.description,
+      ctaText: published.ctaText,
+      ctaUrl: published.ctaUrl,
+      typewriterWords: published.typewriterWords,
+      logoPath: published.logoPath,
+      slides: formatHeroSlides(published.slides),
+    },
   };
 }
 
