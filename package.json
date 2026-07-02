@@ -34,7 +34,8 @@
     "swiper": "^11.2.6",
     "zod": "^3.24.2",
     "dotenv": "^16.4.7",
-    "redis": "^4.7.0"
+    "redis": "^4.7.0",
+    "prisma": "^6.5.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -45,7 +46,6 @@
     "@types/react-dom": "^19.0.4",
     "eslint": "^9",
     "eslint-config-next": "15.2.3",
-    "prisma": "^6.5.0",
     "tailwindcss": "^4",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"

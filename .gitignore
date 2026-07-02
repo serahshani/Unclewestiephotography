@@ -37,6 +37,9 @@ yarn-error.log*
 # uploaded assets
 /public/uploads/
 
+# one-time setup lock (created after /api/setup/migrate succeeds)
+/.data/
+
 # vercel
 .vercel
 
