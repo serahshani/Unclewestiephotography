@@ -11,7 +11,7 @@ export const FEATURED_SERVICES = [
       'High-resolution digital gallery',
       'Custom album design available',
     ],
-    image: '/services-hero.jpg',
+    image: '/Services-hero.jpg',
     imageAlt: 'Wedding photography coverage by Uncle Westiee Studios in Kenya',
   },
   {

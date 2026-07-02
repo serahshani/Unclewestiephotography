@@ -4,13 +4,19 @@ import { createPageMetadata } from '@/lib/seo/metadata';
 import { breadcrumbSchema, webPageSchema } from '@/lib/seo/schemas';
 import { getSiteUrl } from '@/lib/api-utils';
 import { ABOUT_BREADCRUMBS } from '@/lib/page-breadcrumbs';
+import { SITE_NAME } from '@/lib/site-config';
+
+const PAGE_TITLE = 'About Uncle Westiee Studios';
+const PAGE_DESCRIPTION =
+  'Meet Uncle Westiee Studios — wedding, portrait, and event photographers and videographers in Kenya. Our story, values, and approach from Nairobi to Samburu and nationwide.';
 
 export const metadata = createPageMetadata({
-  title: 'About Us',
-  description:
-    'Learn about Uncle Westiee Studios – our journey, philosophy, and passion for capturing moments and crafting memories in Kenya.',
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   path: '/about',
-  keywords: 'about Uncle Westiee Studios, photography team Kenya, studio philosophy',
+  keywords:
+    'about Uncle Westiee Studios, wedding photographer Kenya, photography team Nairobi, videography studio Kenya, Samburu photographer, portrait photographer Kenya',
+  image: '/Westiee-about.jpeg',
 });
 
 export default function AboutLayout({
@@ -28,8 +34,8 @@ export default function AboutLayout({
           webPageSchema(
             siteUrl,
             '/about',
-            'About Us',
-            'Our journey and philosophy as Kenya photography and videography specialists'
+            `${PAGE_TITLE} | ${SITE_NAME}`,
+            PAGE_DESCRIPTION
           ),
           breadcrumbSchema(siteUrl, breadcrumbs),
         ]}
