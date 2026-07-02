@@ -66,7 +66,15 @@ export async function apiFetch<T>(
 export async function uploadFile(
   file: File,
   type: 'hero' | 'gallery'
-): Promise<{ imagePath: string; filename: string }> {
+): Promise<{ imagePath: string; filename: string }>;
+export async function uploadFile(
+  file: File,
+  type: 'video'
+): Promise<{ videoPath: string; filename: string }>;
+export async function uploadFile(
+  file: File,
+  type: 'hero' | 'gallery' | 'video'
+): Promise<{ imagePath?: string; videoPath?: string; filename: string }> {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('type', type);
@@ -86,5 +94,5 @@ export async function uploadFile(
     );
   }
 
-  return data as { imagePath: string; filename: string };
+  return data as { imagePath?: string; videoPath?: string; filename: string };
 }

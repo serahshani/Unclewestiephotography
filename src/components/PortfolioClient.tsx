@@ -11,10 +11,13 @@ export interface MediaItem {
   src?: string;
   alt?: string;
   slug?: string;
+  videoSource?: 'youtube' | 'upload';
   videoId?: string;
   title?: string;
   description?: string;
   category?: string;
+  sortOrder?: number;
+  createdAt?: number;
 }
 
 interface PortfolioClientProps {
@@ -85,7 +88,7 @@ export default function PortfolioClient({
             {filteredMedia.length > 0 ? (
               filteredMedia.map((mediaItem, index) => (
                 <div
-                  key={`${mediaItem.type}-${mediaItem.src ?? mediaItem.videoId}-${index}`}
+                  key={`${mediaItem.type}-${mediaItem.src ?? mediaItem.videoId ?? mediaItem.title}-${index}`}
                   className="relative w-full overflow-hidden group rounded-md shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out"
                 >
                   <div className="relative w-full" style={{ paddingTop: '100%' }}>
@@ -121,6 +124,30 @@ export default function PortfolioClient({
                           </p>
                         </div>
                       </>
+                    ) : mediaItem.videoSource === 'upload' && mediaItem.src ? (
+                      <button
+                        type="button"
+                        onClick={() => openLightbox(mediaItem)}
+                        className="absolute inset-0 w-full h-full cursor-pointer"
+                        aria-label={`Play video ${mediaItem.title}`}
+                      >
+                        <video
+                          src={mediaItem.src}
+                          muted
+                          playsInline
+                          preload="metadata"
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                        <div className="p-4 bg-white absolute bottom-0 left-0 right-0 text-left">
+                          <p className="text-lg font-semibold text-gray-800">{mediaItem.title}</p>
+                          <p className="text-sm text-gray-500 line-clamp-2">{mediaItem.description}</p>
+                        </div>
+                      </button>
                     ) : (
                       <button
                         type="button"

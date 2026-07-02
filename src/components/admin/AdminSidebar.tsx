@@ -38,6 +38,7 @@ type AdminSidebarProps = {
   onLogout: () => void;
   adminUsername: string;
   avatarSrc: string;
+  compact?: boolean;
 };
 
 export default function AdminSidebar({
@@ -47,6 +48,7 @@ export default function AdminSidebar({
   onLogout,
   adminUsername,
   avatarSrc,
+  compact = false,
 }: AdminSidebarProps) {
   const pathname = usePathname();
 
@@ -58,7 +60,7 @@ export default function AdminSidebar({
   return (
     <aside
       className={`flex h-full flex-col bg-[#012D26] px-[14px] py-[22px] text-white transition-[width] duration-300 ${
-        collapsed ? 'w-[90px]' : 'w-[270px]'
+        collapsed ? 'w-[90px]' : compact ? 'w-full' : 'w-[270px]'
       }`}
     >
       <div className="flex items-center gap-[10px] px-[10px] pb-[18px]">

@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getSessionFromRequest, validateCsrf } from '@/lib/auth';
-import { processAndSaveImage, UploadType } from '@/lib/upload';
+import { processAndSaveImage, processAndSaveVideo, UploadType } from '@/lib/upload';
 import { jsonError, jsonSuccess } from '@/lib/api-utils';
 
 export const maxDuration = 120;
@@ -25,11 +25,16 @@ export async function POST(request: NextRequest) {
     return jsonError('No file provided');
   }
 
-  if (type !== 'hero' && type !== 'gallery') {
-    return jsonError('Invalid upload type. Use "hero" or "gallery"');
+  if (type !== 'hero' && type !== 'gallery' && type !== 'video') {
+    return jsonError('Invalid upload type. Use "hero", "gallery", or "video"');
   }
 
   try {
+    if (type === 'video') {
+      const result = await processAndSaveVideo(file);
+      return jsonSuccess(result, 201);
+    }
+
     const result = await processAndSaveImage(file, type);
     return jsonSuccess(result, 201);
   } catch (err) {

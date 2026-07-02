@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isSafeImagePath } from '@/lib/upload';
+import { isSafeImagePath, isSafeVideoPath } from '@/lib/upload';
 
 const imagePathSchema = z
   .string()
@@ -59,12 +59,42 @@ export const galleryCreateSchema = z.object({
 
 export const galleryUpdateSchema = galleryCreateSchema.partial();
 
-export const videoCreateSchema = z.object({
-  title: z.string().min(1).max(200),
+export const videoSourceTypeSchema = z.enum(['youtube', 'upload']);
+
+export const videoCreateSchema = z
+  .object({
+    title: z.string().min(1).max(200),
+    description: z.string().max(2000).optional().nullable(),
+    category: z.string().max(50).optional().nullable(),
+    sortOrder: z.number().int().min(0).optional(),
+    sourceType: videoSourceTypeSchema,
+    youtubeUrl: z.string().url().max(500).optional().nullable(),
+    videoPath: z.string().max(500).optional().nullable(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.sourceType === 'youtube') {
+      if (!data.youtubeUrl?.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'YouTube URL is required',
+          path: ['youtubeUrl'],
+        });
+      }
+    } else if (!data.videoPath?.trim() || !isSafeVideoPath(data.videoPath)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'A valid uploaded video is required',
+        path: ['videoPath'],
+      });
+    }
+  });
+
+export const videoUpdateSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
   description: z.string().max(2000).optional().nullable(),
-  youtubeUrl: z.string().url().max(500),
   category: z.string().max(50).optional().nullable(),
   sortOrder: z.number().int().min(0).optional(),
+  sourceType: videoSourceTypeSchema.optional(),
+  youtubeUrl: z.string().url().max(500).optional().nullable(),
+  videoPath: z.string().max(500).optional().nullable(),
 });
-
-export const videoUpdateSchema = videoCreateSchema.partial();

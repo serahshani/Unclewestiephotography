@@ -1,5 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+
 type AdminConfirmModalProps = {
   open: boolean;
   title: string;
@@ -7,6 +10,7 @@ type AdminConfirmModalProps = {
   confirmLabel?: string;
   cancelLabel?: string;
   loading?: boolean;
+  loadingLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
 };
@@ -18,14 +22,29 @@ export default function AdminConfirmModal({
   confirmLabel = 'Confirm',
   cancelLabel = 'Cancel',
   loading = false,
+  loadingLabel = 'Please wait...',
   onConfirm,
   onCancel,
 }: AdminConfirmModalProps) {
-  if (!open) return null;
+  const [mounted, setMounted] = useState(false);
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
+  if (!open || !mounted) return null;
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 px-4"
+      className="fixed inset-0 z-[200] flex h-[100dvh] w-full items-center justify-center overflow-hidden bg-black/50 px-4"
       role="presentation"
       onClick={onCancel}
     >
@@ -58,10 +77,11 @@ export default function AdminConfirmModal({
             disabled={loading}
             className="cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-50"
           >
-            {loading ? 'Logging out...' : confirmLabel}
+            {loading ? loadingLabel : confirmLabel}
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

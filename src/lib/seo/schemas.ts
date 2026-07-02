@@ -93,19 +93,28 @@ export function videoObjectSchema(
   video: {
     title: string;
     description?: string | null;
-    youtubeId: string;
+    sourceType?: 'youtube' | 'upload';
+    youtubeId?: string | null;
+    videoPath?: string | null;
     createdAt?: Date;
   }
 ) {
+  const isUpload = video.sourceType === 'upload' && video.videoPath;
   return {
     '@context': 'https://schema.org',
     '@type': 'VideoObject',
     name: escapeJsonLd(video.title),
     description: video.description ? escapeJsonLd(video.description) : undefined,
-    thumbnailUrl: `https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`,
-    embedUrl: `https://www.youtube.com/embed/${video.youtubeId}`,
+    thumbnailUrl: isUpload
+      ? undefined
+      : `https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg`,
+    embedUrl: isUpload
+      ? undefined
+      : `https://www.youtube.com/embed/${video.youtubeId}`,
     uploadDate: video.createdAt?.toISOString(),
-    contentUrl: `https://www.youtube.com/watch?v=${video.youtubeId}`,
+    contentUrl: isUpload
+      ? `${siteUrl}${video.videoPath}`
+      : `https://www.youtube.com/watch?v=${video.youtubeId}`,
   };
 }
 

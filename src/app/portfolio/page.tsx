@@ -1,3 +1,4 @@
+import { sortByDisplayOrder } from '@/lib/sort-media';
 import PortfolioClient, { MediaItem } from '@/components/PortfolioClient';
 import PublicLayout from '@/components/layout/PublicLayout';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
@@ -33,17 +34,23 @@ function buildPortfolioData(
     alt: img.altText,
     slug: img.slug,
     category: img.category ?? undefined,
+    sortOrder: img.sortOrder,
+    createdAt: img.createdAt.getTime(),
   }));
 
   const videoMedia: MediaItem[] = videos.map((v) => ({
     type: 'video' as const,
-    videoId: v.youtubeId,
+    videoSource: (v.sourceType === 'upload' ? 'upload' : 'youtube') as 'youtube' | 'upload',
+    videoId: v.youtubeId ?? undefined,
+    src: v.sourceType === 'upload' ? v.videoPath ?? undefined : undefined,
     title: v.title,
     description: v.description ?? undefined,
     category: v.category ?? undefined,
+    sortOrder: v.sortOrder,
+    createdAt: v.createdAt.getTime(),
   }));
 
-  const allMedia = [...imageMedia, ...videoMedia];
+  const allMedia = sortByDisplayOrder([...imageMedia, ...videoMedia]);
 
   const categorySet = new Set<string>();
   images.forEach((i) => i.category && categorySet.add(i.category));
@@ -104,7 +111,9 @@ export default async function PortfolioPage() {
             videoObjectSchema(siteUrl, {
               title: v.title,
               description: v.description,
+              sourceType: v.sourceType === 'upload' ? 'upload' : 'youtube',
               youtubeId: v.youtubeId,
+              videoPath: v.videoPath,
               createdAt: v.createdAt,
             })
           ),

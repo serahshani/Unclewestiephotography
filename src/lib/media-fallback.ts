@@ -203,9 +203,24 @@ export async function resolveGalleryImages(
   );
 }
 
-export async function resolveVideos(videos: DefaultVideo[]): Promise<DefaultVideo[]> {
+export async function resolveVideos(
+  videos: Array<
+    Omit<DefaultVideo, 'sourceType' | 'youtubeUrl' | 'youtubeId' | 'videoPath'> & {
+      sourceType?: string;
+      youtubeUrl?: string | null;
+      youtubeId?: string | null;
+      videoPath?: string | null;
+    }
+  >
+): Promise<DefaultVideo[]> {
   if (videos.length === 0) return getDefaultVideos();
-  return videos;
+  return videos.map((video) => ({
+    ...video,
+    sourceType: video.sourceType === 'upload' ? 'upload' : 'youtube',
+    youtubeUrl: video.youtubeUrl ?? null,
+    youtubeId: video.youtubeId ?? null,
+    videoPath: video.videoPath ?? null,
+  }));
 }
 
 export async function resolveFeaturedGalleryImages(

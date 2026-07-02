@@ -56,8 +56,17 @@ const LightboxModal = ({ media, onClose }) => {
                 priority
               />
             </div>
+          ) : media.type === 'video' && media.videoSource === 'upload' && media.src ? (
+            <div className="relative w-[90vw] max-w-[1000px] bg-black">
+              <video
+                src={media.src}
+                controls
+                autoPlay
+                playsInline
+                className="max-h-[80vh] w-full"
+              />
+            </div>
           ) : (
-            // Video Display (YouTube Embed)
             <div className="relative w-[90vw] h-[50vw] max-w-[1000px] max-h-[562px]"> {/* 16:9 aspect ratio max */}
               <iframe
                 src={`https://www.youtube.com/embed/${media.videoId}?autoplay=1`} // Autoplay video

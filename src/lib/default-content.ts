@@ -62,8 +62,10 @@ export type DefaultVideo = {
   id: string;
   title: string;
   description: string | null;
-  youtubeUrl: string;
-  youtubeId: string;
+  sourceType: 'youtube' | 'upload';
+  youtubeUrl: string | null;
+  youtubeId: string | null;
+  videoPath: string | null;
   category: string | null;
   sortOrder: number;
   createdAt: Date;
@@ -105,8 +107,10 @@ export function getDefaultVideos(): DefaultVideo[] {
     id: `default-video-${i}`,
     title: video.title,
     description: video.description,
+    sourceType: 'youtube' as const,
     youtubeUrl: `https://www.youtube.com/watch?v=${video.youtubeId}`,
     youtubeId: video.youtubeId,
+    videoPath: null,
     category: video.category,
     sortOrder: i,
     createdAt: new Date(0),

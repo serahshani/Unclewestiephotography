@@ -43,7 +43,7 @@ export async function getGalleryImages(options?: {
           : {}),
         ...(options?.featured ? { featured: true } : {}),
       },
-      orderBy: { sortOrder: 'asc' },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
     });
 
     if (options?.featured) {
@@ -64,7 +64,7 @@ export async function getVideos(category?: string) {
     const videos = await prisma.video.findMany({
       where:
         category && category !== 'all' ? { category } : undefined,
-      orderBy: { sortOrder: 'asc' },
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
     });
     return resolveVideos(videos);
   } catch {

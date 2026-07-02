@@ -3,7 +3,7 @@ import { revalidatePublicContent } from '@/lib/revalidate';
 import { prisma } from '@/lib/prisma';
 import { getSessionFromRequest, validateCsrf } from '@/lib/auth';
 import { videoCreateSchema } from '@/lib/validators';
-import { extractYouTubeId } from '@/lib/youtube';
+import { buildVideoCreateData } from '@/lib/video-source';
 import { jsonError, jsonSuccess } from '@/lib/api-utils';
 import { resolveVideos } from '@/lib/media-fallback';
 
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
 
   const videos = await prisma.video.findMany({
     where: category && category !== 'all' ? { category } : undefined,
-    orderBy: { sortOrder: 'asc' },
+    orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
   });
 
   return jsonSuccess(await resolveVideos(videos));
@@ -35,24 +35,26 @@ export async function POST(request: NextRequest) {
     return jsonError(parsed.error.errors[0]?.message ?? 'Invalid input');
   }
 
-  const youtubeId = extractYouTubeId(parsed.data.youtubeUrl);
-  if (!youtubeId) {
-    return jsonError('Invalid YouTube URL');
-  }
+  const built = buildVideoCreateData(parsed.data);
+  if (built.error) return jsonError(built.error);
 
-  const maxOrder = await prisma.video.aggregate({
-    _max: { sortOrder: true },
-  });
+  const video = await prisma.$transaction(async (tx) => {
+    await tx.video.updateMany({
+      data: { sortOrder: { increment: 1 } },
+    });
 
-  const video = await prisma.video.create({
-    data: {
-      title: parsed.data.title,
-      description: parsed.data.description,
-      youtubeUrl: parsed.data.youtubeUrl,
-      youtubeId,
-      category: parsed.data.category,
-      sortOrder: parsed.data.sortOrder ?? (maxOrder._max.sortOrder ?? -1) + 1,
-    },
+    return tx.video.create({
+      data: {
+        title: built.data.title,
+        description: built.data.description ?? null,
+        category: built.data.category ?? null,
+        sourceType: built.data.sourceType,
+        youtubeUrl: built.data.youtubeUrl ?? null,
+        youtubeId: built.data.youtubeId ?? null,
+        videoPath: built.data.videoPath ?? null,
+        sortOrder: parsed.data.sortOrder ?? 0,
+      },
+    });
   });
 
   revalidatePublicContent();

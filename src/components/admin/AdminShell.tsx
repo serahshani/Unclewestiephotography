@@ -35,6 +35,14 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   const pageTitle = getPageTitle(pathname);
 
   useEffect(() => {
+    const html = document.documentElement;
+    html.classList.add('admin-page');
+    return () => {
+      html.classList.remove('admin-page');
+    };
+  }, []);
+
+  useEffect(() => {
     const stored = localStorage.getItem(COLLAPSE_KEY);
     if (stored === 'true') setCollapsed(true);
   }, []);
@@ -109,12 +117,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         confirmLabel="Logout"
         cancelLabel="Stay signed in"
         loading={logoutLoading}
+        loadingLabel="Logging out..."
         onConfirm={() => void performLogout()}
         onCancel={() => setLogoutModalOpen(false)}
       />
 
-      <div className="h-screen w-full overflow-hidden bg-[#012D26]">
-        <div className="flex h-full w-full overflow-hidden">
+      <div className="fixed inset-0 flex overflow-hidden bg-[#012D26]">
+        <div className="flex h-full min-h-0 w-full overflow-hidden">
           <div className="hidden border-r border-white/10 md:block">
             <AdminSidebar
               collapsed={collapsed}
@@ -132,11 +141,12 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               aria-hidden="true"
             >
               <div
-                className="h-full w-[300px] bg-[#012D26]"
+                className="h-full w-[250px] max-w-[76vw] bg-[#012D26]"
                 onClick={(e) => e.stopPropagation()}
               >
                 <AdminSidebar
                   collapsed={false}
+                  compact
                   onToggle={() => setMobileOpen(false)}
                   onNavigate={() => setMobileOpen(false)}
                   onLogout={openLogoutModal}
@@ -150,7 +160,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           <div className="flex h-full min-w-0 flex-1 flex-col overflow-hidden bg-[#f4f5f7]">
             <header className="border-b border-[#012D26]/10 bg-white px-4 py-3 sm:px-7 sm:pt-[18px]">
               <div className="flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3 min-w-0">
+                <div className="flex min-w-0 items-center gap-3">
                   <button
                     type="button"
                     title="Open menu"
@@ -227,7 +237,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               </div>
             </header>
 
-            <main className="flex-1 overflow-y-auto px-4 pb-6 pt-4 sm:px-7 sm:pb-7 sm:pt-[18px]">
+            <main className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain bg-[#f4f5f7] px-4 pb-6 pt-4 sm:px-7 sm:pb-7 sm:pt-[18px]">
               {children}
             </main>
           </div>

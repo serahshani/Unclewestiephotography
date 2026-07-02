@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
       ...(category && category !== 'all' ? { category } : {}),
       ...(featured === 'true' ? { featured: true } : {}),
     },
-    orderBy: { sortOrder: 'asc' },
+    orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
   });
 
   const resolved =
@@ -53,21 +53,23 @@ export async function POST(request: NextRequest) {
     slug = `${baseSlug}-${counter++}`;
   }
 
-  const maxOrder = await prisma.galleryImage.aggregate({
-    _max: { sortOrder: true },
-  });
+  const image = await prisma.$transaction(async (tx) => {
+    await tx.galleryImage.updateMany({
+      data: { sortOrder: { increment: 1 } },
+    });
 
-  const image = await prisma.galleryImage.create({
-    data: {
-      title: data.title,
-      description: data.description,
-      imagePath: data.imagePath,
-      altText: data.altText,
-      slug,
-      category: data.category,
-      sortOrder: data.sortOrder ?? (maxOrder._max.sortOrder ?? -1) + 1,
-      featured: data.featured ?? false,
-    },
+    return tx.galleryImage.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        imagePath: data.imagePath,
+        altText: data.altText,
+        slug,
+        category: data.category,
+        sortOrder: data.sortOrder ?? 0,
+        featured: data.featured ?? false,
+      },
+    });
   });
 
   revalidatePublicContent();

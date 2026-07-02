@@ -28,6 +28,16 @@ html {
   scroll-behavior: smooth;
 }
 
+html.admin-page,
+html.admin-page body {
+  overflow: hidden;
+  height: 100%;
+}
+
+html.admin-page body {
+  background-color: #f4f5f7;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

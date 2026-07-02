@@ -3,7 +3,8 @@ import { revalidatePublicContent } from '@/lib/revalidate';
 import { prisma } from '@/lib/prisma';
 import { getSessionFromRequest, validateCsrf } from '@/lib/auth';
 import { videoUpdateSchema } from '@/lib/validators';
-import { extractYouTubeId } from '@/lib/youtube';
+import { buildVideoUpdateData } from '@/lib/video-source';
+import { deleteUploadedFile } from '@/lib/upload';
 import { jsonError, jsonSuccess } from '@/lib/api-utils';
 
 export async function GET(
@@ -40,17 +41,30 @@ export async function PUT(
     return jsonError(parsed.error.errors[0]?.message ?? 'Invalid input');
   }
 
-  const data = { ...parsed.data };
-  if (data.youtubeUrl) {
-    const youtubeId = extractYouTubeId(data.youtubeUrl);
-    if (!youtubeId) return jsonError('Invalid YouTube URL');
-    Object.assign(data, { youtubeId });
-  }
+  const { title, description, category, sortOrder, sourceType, youtubeUrl, videoPath } =
+    parsed.data;
+
+  const built = buildVideoUpdateData(existing, {
+    sourceType,
+    youtubeUrl,
+    videoPath,
+  });
+  if (built.error) return jsonError(built.error);
 
   const video = await prisma.video.update({
     where: { id },
-    data,
+    data: {
+      ...(title !== undefined ? { title } : {}),
+      ...(description !== undefined ? { description } : {}),
+      ...(category !== undefined ? { category } : {}),
+      ...(sortOrder !== undefined ? { sortOrder } : {}),
+      ...built.data,
+    },
   });
+
+  if (built.deleteVideoPath) {
+    await deleteUploadedFile(built.deleteVideoPath);
+  }
 
   revalidatePublicContent();
   return jsonSuccess(video);
@@ -69,6 +83,11 @@ export async function DELETE(
   if (!existing) return jsonError('Video not found', 404);
 
   await prisma.video.delete({ where: { id } });
+
+  if (existing.sourceType === 'upload' && existing.videoPath) {
+    await deleteUploadedFile(existing.videoPath);
+  }
+
   revalidatePublicContent();
   return jsonSuccess({ message: 'Video deleted' });
 }

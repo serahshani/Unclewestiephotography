@@ -69,14 +69,17 @@ model Video {
   id          String   @id @default(cuid())
   title       String
   description String?  @db.Text
-  youtubeUrl  String
-  youtubeId   String
+  sourceType  String   @default("youtube")
+  youtubeUrl  String?
+  youtubeId   String?
+  videoPath   String?
   category    String?
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([category])
+  @@index([sourceType])
   @@index([youtubeId])
 }
 
