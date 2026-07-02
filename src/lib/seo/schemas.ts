@@ -121,3 +121,37 @@ export function videoObjectSchema(
 export function localBusinessSchema(siteUrl: string) {
   return organizationSchema(siteUrl);
 }
+
+export function contactPageSchema(siteUrl: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'Contact Uncle Westiee Studios',
+    description:
+      'Contact Uncle Westiee Studios for wedding, portrait, and event photography and videography bookings in Kenya.',
+    url: `${siteUrl}/contact`,
+    mainEntity: {
+      '@type': 'ContactPoint',
+      telephone: CONTACT.phone,
+      email: CONTACT.email,
+      contactType: 'customer service',
+      areaServed: 'KE',
+      availableLanguage: ['English', 'Swahili'],
+    },
+  };
+}
+
+export function faqPageSchema(items: { question: string; answer: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: escapeJsonLd(item.question),
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: escapeJsonLd(item.answer),
+      },
+    })),
+  };
+}

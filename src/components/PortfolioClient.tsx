@@ -4,7 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import LightboxModal from '@/app/Components/LightboxModal';
+import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import { getYouTubeThumbnail } from '@/lib/youtube';
+import type { PageBreadcrumbItem } from '@/lib/page-breadcrumbs';
 
 export interface MediaItem {
   type: 'image' | 'video';
@@ -24,12 +26,14 @@ interface PortfolioClientProps {
   categories: { id: string; name: string }[];
   allMedia: MediaItem[];
   mediaByCategory: Record<string, MediaItem[]>;
+  breadcrumbs?: PageBreadcrumbItem[];
 }
 
 export default function PortfolioClient({
   categories,
   allMedia,
   mediaByCategory,
+  breadcrumbs,
 }: PortfolioClientProps) {
   const [activeCategory, setActiveCategory] = useState('all');
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -52,8 +56,13 @@ export default function PortfolioClient({
 
   return (
     <>
-      <section className="min-h-screen pb-16 bg-gradient-to-br from-gray-50 to-gray-100">
-        <div className="container mx-auto px-6 lg:px-10">
+      <section className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-16">
+        <div className="container mx-auto px-6 pt-28 lg:px-10">
+          {breadcrumbs && (
+            <div className="mb-10">
+              <Breadcrumbs items={breadcrumbs} variant="dark" />
+            </div>
+          )}
           <h1 className="text-5xl md:text-6xl font-extrabold text-center text-[#012D26] mb-6 leading-tight">
             Our Visual Journey
           </h1>

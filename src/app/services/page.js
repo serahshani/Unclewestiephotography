@@ -1,29 +1,23 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Camera, Heart, Briefcase, Film, Users, Sparkles, Satellite } from 'lucide-react';
+import PageHero from '@/components/layout/PageHero';
+import { SERVICES_BREADCRUMBS } from '@/lib/page-breadcrumbs';
 
 export default function ServicesPage() {
   return (
     <>
-      {/* Hero Section: Our Services */}
-      <section className="relative w-full h-[600px] flex items-center justify-center text-white overflow-hidden pt-50">
-        <Image
-          src="/Servicespagehero.jpg" // Replace with a compelling image representing your services
-          alt="Diverse Studios Services"
-          fill={true}
-          className="object-cover object-center brightness-[.4]"
-          priority
-          sizes="100vw"
-        />
-        <div className="relative z-10 text-center px-6 md:px-10">
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-4 leading-tight drop-shadow-lg animate-fade-in-up">
-            Tailored Studios & Videography Services
-          </h1>
-          <p className="text-xl md:text-2xl max-w-4xl mx-auto italic drop-shadow-md animate-fade-in-up delay-200">
-            Your vision, beautifully captured. Explore our range of professional services.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        image="/Servicespagehero.jpg"
+        imageAlt="Diverse Studios Services"
+        title="Tailored Studios & Videography Services"
+        subtitle="Your vision, beautifully captured. Explore our range of professional services."
+        breadcrumbs={SERVICES_BREADCRUMBS}
+        heightClass="h-[600px] max-h-[80vh]"
+        imagePosition="object-[center_25%]"
+        imageBrightness="brightness-[.4]"
+        priority
+      />
 
       {/* Services Overview Section (Target for Navbar link) */}
       <section id="services-section" className="py-20 px-6 bg-gradient-to-br from-gray-100 to-white">

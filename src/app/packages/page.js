@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { CheckCircle } from 'lucide-react'; // Icon for features
+import { CheckCircle } from 'lucide-react';
+import PageHero from '@/components/layout/PageHero';
+import { PACKAGES_BREADCRUMBS } from '@/lib/page-breadcrumbs';
 
 const PHONE_NUMBER = '+254791264173'; // Your WhatsApp number (no "+", no spaces)
 const WHATSAPP_BASE = `https://wa.me/${PHONE_NUMBER}`;
@@ -65,25 +67,17 @@ export default function PackagesPage() {
 
   return (
     <>
-      {/* Hero Section: Our Packages */}
-      <section className="relative w-full h-[60vh] flex items-center justify-center text-white overflow-hidden pt-20">
-        <Image
-          src="/Packages.jpg" // Replace with an image representing value/offerings
-          alt="Studios Pricing Packages"
-          fill={true}
-          className="object-cover object-center brightness-[.4]"
-          priority
-          sizes="100vw"
-        />
-        <div className="relative z-10 text-center px-6 md:px-10">
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-4 leading-tight drop-shadow-lg animate-fade-in-up">
-            Transparent Studios Packages
-          </h1>
-          <p className="text-xl md:text-2xl max-w-4xl mx-auto italic drop-shadow-md animate-fade-in-up delay-200">
-            Exceptional quality, designed for every budget and occasion.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        image="/Packages.jpg"
+        imageAlt="Studios Pricing Packages"
+        title="Transparent Studios Packages"
+        subtitle="Exceptional quality, designed for every budget and occasion."
+        breadcrumbs={PACKAGES_BREADCRUMBS}
+        heightClass="h-[60vh] min-h-[400px]"
+        imagePosition="object-[center_35%]"
+        imageBrightness="brightness-[.4]"
+        priority
+      />
 
       {/* Packages Overview Section (Target for Navbar link) */}
       <section id="packages-section" className="py-20 px-6 bg-gradient-to-br from-gray-100 to-white">

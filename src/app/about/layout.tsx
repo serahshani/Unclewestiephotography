@@ -1,9 +1,9 @@
 import PublicLayout from '@/components/layout/PublicLayout';
 import JsonLd from '@/components/seo/JsonLd';
-import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import { createPageMetadata } from '@/lib/seo/metadata';
 import { breadcrumbSchema, webPageSchema } from '@/lib/seo/schemas';
 import { getSiteUrl } from '@/lib/api-utils';
+import { ABOUT_BREADCRUMBS } from '@/lib/page-breadcrumbs';
 
 export const metadata = createPageMetadata({
   title: 'About Us',
@@ -19,10 +19,7 @@ export default function AboutLayout({
   children: React.ReactNode;
 }) {
   const siteUrl = getSiteUrl();
-  const breadcrumbs = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-  ];
+  const breadcrumbs = ABOUT_BREADCRUMBS;
 
   return (
     <PublicLayout>
@@ -37,9 +34,6 @@ export default function AboutLayout({
           breadcrumbSchema(siteUrl, breadcrumbs),
         ]}
       />
-      <div className="container mx-auto px-6 pt-28">
-        <Breadcrumbs items={breadcrumbs} />
-      </div>
       {children}
     </PublicLayout>
   );

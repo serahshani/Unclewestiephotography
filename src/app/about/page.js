@@ -1,28 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import PageHero from '@/components/layout/PageHero';
+import { ABOUT_BREADCRUMBS } from '@/lib/page-breadcrumbs';
 
 export default function AboutPage() {
   return (
     <>
-      {/* Hero Section: Our Passion */}
-      <section className="relative w-full h-[60vh] flex items-center justify-center text-white overflow-hidden pt-20">
-        <Image
-          src="/Gallery6.jpg" // Replace with your compelling About Us hero image
-          alt="Uncle Westiee Studios Team at Work"
-          fill={true}
-          className="object-cover object-center brightness-[.5]" // Slightly dimmed for text readability
-          priority
-          sizes="100vw"
-        />
-        <div className="relative z-10 text-center px-6 md:px-10">
-          <h1 className="text-5xl md:text-7xl font-extrabold mb-4 leading-tight drop-shadow-lg animate-fade-in-up">
-            Capturing Moments, Crafting Memories
-          </h1>
-          <p className="text-xl md:text-2xl max-w-4xl mx-auto italic drop-shadow-md animate-fade-in-up delay-200">
-            More than just photos, we tell your unique story through the art of light and emotion.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        image="/Gallery6.jpg"
+        imageAlt="Uncle Westiee Studios Team at Work"
+        title="Capturing Moments, Crafting Memories"
+        subtitle="More than just photos, we tell your unique story through the art of light and emotion."
+        breadcrumbs={ABOUT_BREADCRUMBS}
+        heightClass="h-[60vh] min-h-[400px]"
+        imagePosition="object-[center_20%]"
+        imageBrightness="brightness-[.5]"
+        priority
+      />
 
       {/* About Our Story Section (Target for Navbar link) */}
       <section id="about-section" className="py-20 px-6 bg-gradient-to-br from-gray-100 to-white">

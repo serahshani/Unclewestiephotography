@@ -1,156 +1,268 @@
-"use client";
+'use client';
 
-import Image from 'next/image';
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaYoutube, FaTiktok } from 'react-icons/fa';
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaYoutube, FaTiktok, FaChevronDown } from 'react-icons/fa';
 import { FaWhatsapp, FaInstagram, FaFacebook } from 'react-icons/fa';
+import PageHero from '@/components/layout/PageHero';
+import { CONTACT_FAQ_ITEMS } from '@/lib/contact-faq';
+import { CONTACT, SITE_NAME, SOCIAL } from '@/lib/site-config';
+import { CONTACT_BREADCRUMBS } from '@/lib/page-breadcrumbs';
+
+const SOCIAL_LINKS = [
+  { href: SOCIAL.instagram, label: 'Instagram', icon: FaInstagram },
+  { href: SOCIAL.facebook, label: 'Facebook', icon: FaFacebook },
+  { href: SOCIAL.youtube, label: 'YouTube', icon: FaYoutube },
+  { href: SOCIAL.tiktok, label: 'TikTok', icon: FaTiktok },
+];
+
+const BRANCHES = [
+  { label: 'Main branch', location: 'Nairobi, Kenya' },
+  { label: 'Other branches', location: 'Maralal, Samburu, Kenya' },
+];
+
+const SUBJECT_OPTIONS = [
+  { value: '', label: 'Select a subject' },
+  { value: 'Wedding photography', label: 'Wedding photography' },
+  { value: 'Portrait session', label: 'Portrait session' },
+  { value: 'Event coverage', label: 'Event coverage' },
+  { value: 'Commercial & product', label: 'Commercial & product' },
+  { value: 'Videography', label: 'Videography' },
+  { value: 'Aerial / drone', label: 'Aerial / drone' },
+  { value: 'General enquiry', label: 'General enquiry' },
+];
+
+function handleSubmit(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const data = new FormData(form);
+  const name = String(data.get('name') ?? '').trim();
+  const email = String(data.get('email') ?? '').trim();
+  const subject = String(data.get('subject') ?? '').trim() || 'General enquiry';
+  const message = String(data.get('message') ?? '').trim();
+
+  const text = [
+    `Hello! I'm ${name} (${email}).`,
+    '',
+    `*${subject}*`,
+    '',
+    message,
+  ].join('\n');
+
+  window.open(`${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+}
 
 export default function ContactPage() {
   return (
     <>
-      {/* Hero Section for Contact */}
-      <section className="relative w-full h-96 flex items-center justify-center text-white overflow-hidden">
-        <Image
-          src="/Hero3.jpg"
-          alt="Contact Us Background"
-          fill={true}
-          className="object-cover object-center brightness-50"
-          priority
-          sizes="100vw"
-        />
-        <div className="relative z-10 text-center px-4">
-          <h1 className="text-6xl md:text-7xl font-extrabold mb-4 animate-fade-in-up">
-            Get In Touch
-          </h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto italic animate-fade-in-up delay-200">
-            We would love to hear from you. Reach out to discuss your Studios needs!
-          </p>
-        </div>
-      </section>
+      <PageHero
+        image="/Hero3.webp"
+        imageAlt="Contact Uncle Westiee Studios for photography and videography in Kenya"
+        title={`Contact ${SITE_NAME}`}
+        subtitle="Reach out to book a session or discuss your wedding, portrait, or event coverage."
+        breadcrumbs={CONTACT_BREADCRUMBS}
+        heightClass="h-96"
+        imagePosition="object-[center_30%]"
+        imageBrightness="brightness-50"
+        priority
+      />
 
-      {/* Main Contact Content Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-gray-100 to-gray-200">
-        <div className="container mx-auto max-w-5xl">
-          {/* Contact Information */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Contact Information</h2>
-              <div className="space-y-6 text-lg text-gray-700">
-                <div className="flex items-center space-x-4">
-                  <FaPhone className="text-[#012D26] text-2xl" />
-                  <span>+254791264173</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <FaWhatsapp className="text-[#012D26] text-2xl" />
-                  <span>+254791264173</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <FaEnvelope className="text-[#012D26] text-2xl" />
-                  <span>info@unclewestieestudios.co.ke</span>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <FaMapMarkerAlt className="text-[#012D26] text-2xl mt-1" />
-                  <span>
-                    Main branch: Nairobi, Kenya
-                  </span>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <FaMapMarkerAlt className="text-[#012D26] text-2xl mt-1" />
-                  <span>
-                   Other branches: Maralal, Samburu, Kenya
-                  </span>
-                </div>
-              </div>
-              <div className="mt-8 text-center">
-                <h3 className="text-xl font-semibold text-[#012D26] mb-4">Follow Us</h3>
-                <div className="flex justify-center space-x-6">
-                  <a href="https://www.instagram.com/uncle_westiee_studios/?hl=en" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-pink-600 transition-colors duration-300">
-                    <FaInstagram size={36} />
-                  </a>
-                  <a href="https://www.facebook.com/p/Uncle_westiee-photography-100076434076242/" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 transition-colors duration-300">
-                    <FaFacebook size={36} />
-                  </a>
-                  <a href="https://www.youtube.com/channel/UCaPJSHbeHHA5Wft0ywekl-A" target='_blank' rel='noopener noreferrer' className='text-gray-600 hover:text-red-600 transition-colors duration-300'>
-                     <FaYoutube size={36}/>
-                  </a>
-                  <a href="https://www.tiktok.com/@uncle_westiee?lang=en" target='_blank' rel='noopener noreferrer' className='text-gray-600 hover:text-black transition-colors duration-300'>
-                     <FaTiktok size={36}/>
-                  </a>
-                </div>
-              </div>
-            </div>
+      <section id="contact-section" className="bg-white">
+        <div className="mx-auto max-w-6xl px-6 py-16 lg:py-24">
+          <div className="grid grid-cols-1 gap-16 lg:grid-cols-5 lg:gap-20">
+            <div className="lg:col-span-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-600">Enquiry</p>
+              <h2 className="mt-2 font-serif text-3xl font-medium text-[#012D26] sm:text-4xl">
+                Tell us about your shoot
+              </h2>
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-gray-600">
+                Weddings, portraits, events, and commercial work across Kenya. We read every message
+                and respond as soon as we can.
+              </p>
 
-            {/* Contact Form */}
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1">
-              <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Send Us a Message</h2>
-              <form className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-gray-700 text-sm font-medium mb-2">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Your Name"
-                    required
-                  />
+              <form className="mt-10 space-y-7" onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 gap-7 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="name" className="mb-2 block text-sm font-semibold text-gray-700">
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      autoComplete="name"
+                      className="w-full border-b border-gray-200 bg-transparent py-2.5 text-sm text-gray-800 placeholder:text-gray-300 focus:border-[#012D26]/50 focus:outline-none"
+                      placeholder="Your name"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="mb-2 block text-sm font-semibold text-gray-700">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      autoComplete="email"
+                      className="w-full border-b border-gray-200 bg-transparent py-2.5 text-sm text-gray-800 placeholder:text-gray-300 focus:border-[#012D26]/50 focus:outline-none"
+                      placeholder="you@example.com"
+                      required
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-gray-700 text-sm font-medium mb-2">Email</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                    placeholder="you@example.com"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="subject" className="block text-gray-700 text-sm font-medium mb-2">Subject</label>
-                  <input
-                    type="text"
+                  <label htmlFor="subject" className="mb-2 block text-sm font-semibold text-gray-700">
+                    Subject
+                  </label>
+                  <select
                     id="subject"
                     name="subject"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                    placeholder="e.g., Wedding Inquiry, Portrait Session"
-                  />
+                    defaultValue=""
+                    className="w-full border-b border-gray-200 bg-transparent py-2.5 text-sm text-gray-800 focus:border-[#012D26]/50 focus:outline-none"
+                    required
+                  >
+                    {SUBJECT_OPTIONS.map((option) => (
+                      <option key={option.value || 'placeholder'} value={option.value} disabled={option.value === ''}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div>
-                  <label htmlFor="message" className="block text-gray-700 text-sm font-medium mb-2">Message</label>
+                  <label htmlFor="message" className="mb-2 block text-sm font-semibold text-gray-700">
+                    Message
+                  </label>
                   <textarea
                     id="message"
                     name="message"
-                    rows="5"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Tell us about your project or question..."
+                    rows={6}
+                    className="w-full resize-y border border-gray-200 bg-[#faf9f7] px-4 py-3 text-sm text-gray-800 placeholder:text-gray-300 focus:border-[#012D26]/50 focus:outline-none"
+                    placeholder="Date, location, and what you have in mind..."
                     required
-                  ></textarea>
+                  />
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-[#012D26] text-white font-bold py-3 px-6 rounded-lg hover:bg-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105"
+                  className="bg-[#012D26] px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#014a3d]"
                 >
-                  Send Message
+                  Send via WhatsApp
                 </button>
               </form>
             </div>
-          </div>
 
-          {/* Map Section (Optional) */}
-          <div className="mt-20">
-            <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">Find Us on the Map</h2>
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-              <iframe
-                title="Uncle Westiee Studios location on Google Maps"
-                src="https://maps.google.com/maps?q=Uncle+Westiee+Studios,Nairobi,Kenya&hl=en&z=14&output=embed"
-                width="100%"
-                height="450"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </div>
+            <aside className="lg:col-span-2">
+              <div className="border-t border-[#012D26]/10 pt-10 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
+                <h2 className="font-serif text-2xl font-medium text-[#012D26]">Reach us directly</h2>
+
+                <address className="mt-8 space-y-7 not-italic">
+                  <a
+                    href={`tel:${CONTACT.phone}`}
+                    className="flex gap-4 transition-colors hover:text-[#012D26]"
+                  >
+                    <FaPhone className="mt-0.5 shrink-0 text-base text-[#012D26]/75" aria-hidden />
+                    <span>
+                      <span className="block text-xs font-semibold uppercase tracking-wide text-gray-600">Phone</span>
+                      <span className="mt-1 block text-sm text-gray-700">{CONTACT.phone}</span>
+                    </span>
+                  </a>
+                  <a
+                    href={`mailto:${CONTACT.email}`}
+                    className="flex gap-4 transition-colors hover:text-[#012D26]"
+                  >
+                    <FaEnvelope className="mt-0.5 shrink-0 text-base text-[#012D26]/75" aria-hidden />
+                    <span>
+                      <span className="block text-xs font-semibold uppercase tracking-wide text-gray-600">Email</span>
+                      <span className="mt-1 block break-all text-sm text-gray-700">{CONTACT.email}</span>
+                    </span>
+                  </a>
+                  <a
+                    href={CONTACT.whatsapp}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex gap-4 transition-colors hover:text-[#012D26]"
+                  >
+                    <FaWhatsapp className="mt-0.5 shrink-0 text-base text-[#012D26]/75" aria-hidden />
+                    <span>
+                      <span className="block text-xs font-semibold uppercase tracking-wide text-gray-600">WhatsApp</span>
+                      <span className="mt-1 block text-sm text-gray-700">Start a conversation</span>
+                    </span>
+                  </a>
+                  {BRANCHES.map((branch) => (
+                    <div key={branch.label} className="flex gap-4">
+                      <FaMapMarkerAlt className="mt-0.5 shrink-0 text-base text-[#012D26]/75" aria-hidden />
+                      <span>
+                        <span className="block text-xs font-semibold uppercase tracking-wide text-gray-600">{branch.label}</span>
+                        <span className="mt-1 block text-sm text-gray-600">{branch.location}</span>
+                      </span>
+                    </div>
+                  ))}
+                </address>
+
+                <div className="mt-10 border-t border-[#012D26]/10 pt-8">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">Social</p>
+                  <div className="mt-4 flex flex-wrap gap-4">
+                    {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
+                      <a
+                        key={label}
+                        href={href}
+                        target="_blank"
+                        rel="me noopener noreferrer"
+                        aria-label={`${SITE_NAME} on ${label}`}
+                        className="text-[#012D26]/70 transition-colors hover:text-[#012D26]"
+                      >
+                        <Icon size={18} />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-10 overflow-hidden">
+                  <iframe
+                    title="Uncle Westiee Studios location on Google Maps"
+                    src="https://maps.google.com/maps?q=Uncle+Westiee+Studios,Nairobi,Kenya&hl=en&z=14&output=embed"
+                    width="100%"
+                    height="220"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="faq"
+        aria-labelledby="contact-faq-heading"
+        className="border-t border-[#012D26]/10 bg-[#faf9f7]"
+      >
+        <div className="mx-auto max-w-3xl px-6 py-16 lg:py-20">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-600">FAQ</p>
+          <h2
+            id="contact-faq-heading"
+            className="mt-2 font-serif text-3xl font-medium text-[#012D26] sm:text-4xl"
+          >
+            Common questions before you reach out
+          </h2>
+          <p className="mt-4 text-sm leading-relaxed text-gray-600">
+            The questions we get most often on WhatsApp — booking, travel, pricing, and delivery.
+          </p>
+
+          <div className="mt-10 divide-y divide-[#012D26]/10 border-y border-[#012D26]/10">
+            {CONTACT_FAQ_ITEMS.map((item) => (
+              <details key={item.question} className="group">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left text-sm font-semibold text-[#012D26] transition-colors hover:text-[#014a3d] [&::-webkit-details-marker]:hidden">
+                  <span>{item.question}</span>
+                  <FaChevronDown
+                    className="mt-0.5 shrink-0 text-xs text-[#012D26]/50 transition-transform duration-200 group-open:rotate-180"
+                    aria-hidden
+                  />
+                </summary>
+                <p className="pb-5 pr-8 text-sm leading-relaxed text-gray-600">{item.answer}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>

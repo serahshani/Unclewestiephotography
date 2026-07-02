@@ -1,7 +1,6 @@
 import { sortByDisplayOrder } from '@/lib/sort-media';
 import PortfolioClient, { MediaItem } from '@/components/PortfolioClient';
 import PublicLayout from '@/components/layout/PublicLayout';
-import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import JsonLd from '@/components/seo/JsonLd';
 import { getGalleryImages, getVideos } from '@/lib/data';
 import { getSiteUrl } from '@/lib/api-utils';
@@ -12,6 +11,7 @@ import {
   webPageSchema,
 } from '@/lib/seo/schemas';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { PORTFOLIO_BREADCRUMBS } from '@/lib/page-breadcrumbs';
 
 export const revalidate = 60;
 
@@ -82,10 +82,7 @@ export default async function PortfolioPage() {
     buildPortfolioData(images, videos);
   const siteUrl = getSiteUrl();
 
-  const breadcrumbs = [
-    { name: 'Home', path: '/' },
-    { name: 'Portfolio', path: '/portfolio' },
-  ];
+  const breadcrumbs = PORTFOLIO_BREADCRUMBS;
 
   return (
     <PublicLayout>
@@ -119,13 +116,11 @@ export default async function PortfolioPage() {
           ),
         ]}
       />
-      <div className="container mx-auto px-6 lg:px-10 pt-28">
-        <Breadcrumbs items={breadcrumbs} />
-      </div>
       <PortfolioClient
         categories={categories}
         allMedia={allMedia}
         mediaByCategory={mediaByCategory}
+        breadcrumbs={breadcrumbs}
       />
     </PublicLayout>
   );

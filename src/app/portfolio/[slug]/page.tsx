@@ -17,6 +17,7 @@ import {
   getAllGallerySlugs,
 } from '@/lib/data';
 import { getSiteUrl } from '@/lib/api-utils';
+import { portfolioDetailBreadcrumbs } from '@/lib/page-breadcrumbs';
 
 export const revalidate = 60;
 
@@ -63,11 +64,7 @@ export default async function GalleryDetailPage({ params }: Props) {
     image.description ??
     `Photography by Uncle Westiee Studios – ${image.title}`;
 
-  const breadcrumbs = [
-    { name: 'Home', path: '/' },
-    { name: 'Portfolio', path: '/portfolio' },
-    { name: image.title, path: `/portfolio/${slug}` },
-  ];
+  const breadcrumbs = portfolioDetailBreadcrumbs(image.title, slug);
 
   return (
     <PublicLayout>
@@ -84,9 +81,9 @@ export default async function GalleryDetailPage({ params }: Props) {
           }),
         ]}
       />
-      <article className="pt-28 pb-20 px-6 max-w-5xl mx-auto">
-        <Breadcrumbs items={breadcrumbs} />
-        <h1 className="text-4xl md:text-5xl font-bold text-[#012D26] mb-4">
+      <article className="mx-auto max-w-5xl px-6 pb-20 pt-28">
+        <Breadcrumbs items={breadcrumbs} variant="dark" />
+        <h1 className="mb-4 mt-8 text-4xl font-bold text-[#012D26] md:text-5xl">
           {image.title}
         </h1>
         {image.category && (
