@@ -155,3 +155,37 @@ export function faqPageSchema(items: { question: string; answer: string }[]) {
     })),
   };
 }
+
+export function offerCatalogSchema(
+  siteUrl: string,
+  catalogName: string,
+  packages: { id: string; name: string; description: string; category: string }[]
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'OfferCatalog',
+    name: escapeJsonLd(catalogName),
+    url: `${siteUrl}/packages`,
+    itemListElement: packages.map((pkg, index) => ({
+      '@type': 'Offer',
+      position: index + 1,
+      name: escapeJsonLd(pkg.name),
+      description: escapeJsonLd(pkg.description),
+      category: escapeJsonLd(pkg.category),
+      url: `${siteUrl}/packages#${pkg.id}`,
+      availability: 'https://schema.org/InStock',
+      areaServed: 'Kenya',
+      seller: {
+        '@type': 'LocalBusiness',
+        name: 'Uncle Westiee Studios',
+        url: siteUrl,
+        telephone: CONTACT.phone,
+      },
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        priceCurrency: 'KES',
+        description: 'Custom quote based on date, location, and coverage',
+      },
+    })),
+  };
+}
