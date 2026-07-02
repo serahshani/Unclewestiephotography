@@ -1,92 +1,107 @@
-// ../Components/LightboxModal.js
-import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+'use client';
 
-const LightboxModal = ({ media, onClose }) => {
-  if (!media) return null; // Don't render if no media is provided
+import Link from 'next/link';
+import { useEffect } from 'react';
 
-  // Define animation variants for the modal
-  const backdropVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-  };
+export default function LightboxModal({ media, onClose }) {
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+    };
 
-  const modalVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
-    visible: { scale: 1, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 25 } },
-  };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [onClose]);
+
+  if (!media) return null;
+
+  const caption = media.type === 'image' ? media.alt : media.title;
 
   return (
-    <AnimatePresence>
-      <motion.div
-        className="fixed inset-0 z-[1000] flex items-center justify-center p-4" // Increased z-index
-        variants={backdropVariants}
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
-      >
-        {/* Backdrop (Click to close) */}
-        <div
-          className="absolute inset-0 bg-black bg-opacity-75"
-          onClick={onClose}
-        />
+    <div
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-3 sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-label={caption || 'Media preview'}
+    >
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/95"
+        onClick={onClose}
+        aria-label="Close preview"
+      />
 
-        {/* Modal Content */}
-        <motion.div
-          className="relative max-w-full max-h-[90vh] w-auto h-auto bg-gray-900 rounded-lg shadow-2xl overflow-hidden flex flex-col"
-          variants={modalVariants}
-        >
-          {/* Close Button */}
+      <div
+        className="relative z-10 flex max-h-[96vh] w-full max-w-[min(96vw,1600px)] flex-col"
+        onClick={(event) => event.stopPropagation()}
+        onKeyDown={(event) => event.stopPropagation()}
+      >
+        <div className="mb-3 flex shrink-0 items-center justify-end gap-3">
+          {media.type === 'image' && media.slug && (
+            <Link
+              href={`/portfolio/${media.slug}`}
+              className="rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+            >
+              View details
+            </Link>
+          )}
           <button
+            type="button"
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 text-white text-3xl font-bold bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 transition-all duration-200"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
             aria-label="Close"
           >
-            &times;
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18 18 6M6 6l12 12" />
+            </svg>
           </button>
+        </div>
 
+        <div className="flex min-h-0 flex-1 items-center justify-center">
           {media.type === 'image' ? (
-            // Image Display
-            <div className="relative w-[80vw] h-[80vh] max-w-[900px] max-h-[600px]">
-              <Image
-                src={media.src}
-                alt={media.alt}
-                fill
-                className="object-contain" // Use object-contain to ensure whole image is visible
-                priority
-              />
-            </div>
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={media.src}
+              alt={media.alt || 'Gallery image'}
+              className="max-h-[calc(96vh-7rem)] max-w-full object-contain"
+              style={{ width: 'auto', height: 'auto' }}
+            />
           ) : media.type === 'video' && media.videoSource === 'upload' && media.src ? (
-            <div className="relative w-[90vw] max-w-[1000px] bg-black">
-              <video
-                src={media.src}
-                controls
-                autoPlay
-                playsInline
-                className="max-h-[80vh] w-full"
-              />
-            </div>
+            <video
+              src={media.src}
+              controls
+              autoPlay
+              playsInline
+              className="max-h-[calc(96vh-7rem)] max-w-full bg-black"
+            />
           ) : (
-            <div className="relative w-[90vw] h-[50vw] max-w-[1000px] max-h-[562px]"> {/* 16:9 aspect ratio max */}
+            <div className="aspect-video w-full max-w-[min(96vw,1200px)] bg-black">
               <iframe
-                src={`https://www.youtube.com/embed/${media.videoId}?autoplay=1`} // Autoplay video
-                title={media.title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                src={`https://www.youtube.com/embed/${media.videoId}?autoplay=1`}
+                title={media.title || 'Video'}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
-                className="absolute inset-0 w-full h-full"
-              ></iframe>
+                className="h-full w-full border-0"
+              />
             </div>
           )}
+        </div>
 
-          {/* Title/Caption (Optional) */}
-          <div className="p-4 bg-gray-900 text-white text-center">
-            <p className="text-lg font-semibold">{media.type === 'image' ? media.alt : media.title}</p>
+        {(caption || media.description) && (
+          <div className="mt-4 shrink-0 px-1 text-center">
+            {caption && <p className="text-base font-medium text-white">{caption}</p>}
+            {media.type === 'video' && media.description && (
+              <p className="mt-1 text-sm leading-relaxed text-white/70">{media.description}</p>
+            )}
           </div>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        )}
+      </div>
+    </div>
   );
-};
-
-export default LightboxModal;
+}

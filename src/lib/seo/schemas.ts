@@ -189,3 +189,42 @@ export function offerCatalogSchema(
     })),
   };
 }
+
+export function collectionPageSchema(
+  siteUrl: string,
+  path: string,
+  title: string,
+  description: string
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: escapeJsonLd(title),
+    description: escapeJsonLd(description),
+    url: `${siteUrl}${path}`,
+    isPartOf: { '@type': 'WebSite', url: siteUrl },
+  };
+}
+
+export function itemListSchema(
+  siteUrl: string,
+  name: string,
+  items: { name: string; url: string; image?: string }[]
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: escapeJsonLd(name),
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: escapeJsonLd(item.name),
+      url: item.url.startsWith('http') ? item.url : `${siteUrl}${item.url}`,
+      ...(item.image
+        ? {
+            image: item.image.startsWith('http') ? item.image : `${siteUrl}${item.image}`,
+          }
+        : {}),
+    })),
+  };
+}

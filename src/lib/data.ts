@@ -85,6 +85,30 @@ export async function getGalleryImageBySlug(slug: string) {
   }
 }
 
+function pickDiverseGalleryImages<
+  T extends { id: string; category: string | null },
+>(items: T[], excludeId: string, currentCategory: string | null, limit: number): T[] {
+  const pool = items.filter((item) => item.id !== excludeId);
+  const otherCategories = pool.filter((item) => item.category !== currentCategory);
+  const selected: T[] = [];
+
+  for (const item of otherCategories) {
+    if (selected.length >= limit) break;
+    selected.push(item);
+  }
+
+  if (selected.length < limit) {
+    for (const item of pool) {
+      if (selected.length >= limit) break;
+      if (!selected.some((picked) => picked.id === item.id)) {
+        selected.push(item);
+      }
+    }
+  }
+
+  return selected.slice(0, limit);
+}
+
 export async function getRelatedGalleryImages(
   category: string | null,
   excludeId: string,
@@ -92,27 +116,20 @@ export async function getRelatedGalleryImages(
 ) {
   try {
     const related = await prisma.galleryImage.findMany({
-      where: {
-        id: { not: excludeId },
-        ...(category ? { category } : {}),
-      },
+      where: { id: { not: excludeId } },
       orderBy: { sortOrder: 'asc' },
-      take: limit,
     });
 
     if (related.length > 0) {
-      return resolveGalleryImages(related);
+      const resolved = await resolveGalleryImages(related);
+      return pickDiverseGalleryImages(resolved, excludeId, category, limit);
     }
 
-    const defaults = getDefaultGalleryImages().filter(
-      (img) => img.id !== excludeId && (!category || img.category === category)
-    );
-    return defaults.slice(0, limit);
+    const defaults = getDefaultGalleryImages();
+    return pickDiverseGalleryImages(defaults, excludeId, category, limit);
   } catch {
-    const defaults = getDefaultGalleryImages().filter(
-      (img) => !category || img.category === category
-    );
-    return defaults.filter((img) => img.id !== excludeId).slice(0, limit);
+    const defaults = getDefaultGalleryImages();
+    return pickDiverseGalleryImages(defaults, excludeId, category, limit);
   }
 }
 

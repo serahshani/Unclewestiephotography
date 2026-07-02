@@ -81,66 +81,93 @@ export default async function GalleryDetailPage({ params }: Props) {
           }),
         ]}
       />
-      <article className="mx-auto max-w-5xl px-6 pb-20 pt-28">
-        <Breadcrumbs items={breadcrumbs} variant="dark" />
-        <h1 className="mb-4 mt-8 text-4xl font-bold text-[#012D26] md:text-5xl">
-          {image.title}
-        </h1>
-        {image.category && (
-          <p className="text-sm uppercase tracking-wider text-gray-500 mb-6 capitalize">
-            {image.category}
-          </p>
-        )}
-        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden shadow-xl mb-8">
-          <Image
-            src={image.imagePath}
-            alt={image.altText}
-            fill
-            priority
-            sizes="(max-width: 1024px) 100vw, 1024px"
-            className="object-cover"
-          />
-        </div>
-        {image.description && (
-          <p className="text-lg text-gray-700 leading-relaxed mb-10">
-            {image.description}
-          </p>
-        )}
-        <Link
-          href="/portfolio"
-          className="inline-block bg-[#012D26] text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-900 transition-colors"
-        >
-          Back to Portfolio
-        </Link>
 
-        {related.length > 0 && (
-          <section className="mt-16" aria-labelledby="related-heading">
-            <h2 id="related-heading" className="text-2xl font-bold text-[#012D26] mb-6">
-              Related Work
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {related.map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/portfolio/${item.slug}`}
-                  className="group relative aspect-square rounded-lg overflow-hidden shadow-md"
-                >
-                  <Image
-                    src={item.imagePath}
-                    alt={item.altText}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <span className="absolute inset-x-0 bottom-0 bg-black/60 text-white text-sm p-2 truncate">
-                    {item.title}
-                  </span>
-                </Link>
-              ))}
+      <main className="bg-white">
+        <div className="mx-auto max-w-[90rem] px-4 pb-16 pt-28 sm:px-6 lg:pb-20">
+          <Breadcrumbs items={breadcrumbs} variant="dark" />
+
+          <article className="mt-8">
+            <header className="mb-8 max-w-3xl">
+              {image.category && (
+                <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 capitalize">
+                  {image.category}
+                </p>
+              )}
+              <h1 className="mt-2 font-serif text-3xl font-medium text-[#012D26] sm:text-4xl md:text-5xl">
+                {image.title}
+              </h1>
+              {image.description && (
+                <p className="mt-4 text-base leading-relaxed text-gray-600">
+                  {image.description}
+                </p>
+              )}
+            </header>
+
+            <figure>
+              <Image
+                src={image.imagePath}
+                alt={image.altText}
+                width={0}
+                height={0}
+                priority
+                sizes="(max-width: 1280px) 100vw, 1280px"
+                className="h-auto w-full"
+                style={{ width: '100%', height: 'auto', maxHeight: '85vh', objectFit: 'contain' }}
+              />
+              {image.altText && image.altText !== image.title && (
+                <figcaption className="border-t border-gray-200 px-4 py-3 text-sm text-gray-500">
+                  {image.altText}
+                </figcaption>
+              )}
+            </figure>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link
+                href="/portfolio"
+                className="inline-block rounded-lg border border-[#012D26] px-5 py-2.5 text-sm font-semibold text-[#012D26] transition-colors hover:bg-[#012D26] hover:text-white"
+              >
+                Back to portfolio
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-block rounded-lg bg-[#012D26] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#014a3d]"
+              >
+                Book a session
+              </Link>
             </div>
-          </section>
-        )}
-      </article>
+
+            {related.length > 0 && (
+              <section className="mt-16 border-t border-gray-200 pt-12" aria-labelledby="related-heading">
+                <h2 id="related-heading" className="font-serif text-2xl font-medium text-[#012D26]">
+                  More from the portfolio
+                </h2>
+                <div className="mt-6 columns-2 gap-4 lg:columns-4">
+                  {related.map((item) => (
+                    <Link
+                      key={item.id}
+                      href={`/portfolio/${item.slug}`}
+                      className="group mb-4 block break-inside-avoid overflow-hidden"
+                    >
+                      <Image
+                        src={item.imagePath}
+                        alt={item.altText}
+                        width={0}
+                        height={0}
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                        className="h-auto w-full transition-transform duration-300 group-hover:scale-[1.02]"
+                        style={{ width: '100%', height: 'auto' }}
+                      />
+                      <span className="mt-2 block text-sm font-medium text-gray-800 line-clamp-1">
+                        {item.title}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+          </article>
+        </div>
+      </main>
     </PublicLayout>
   );
 }

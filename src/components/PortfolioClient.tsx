@@ -4,9 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import LightboxModal from '@/app/Components/LightboxModal';
-import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import { getYouTubeThumbnail } from '@/lib/youtube';
-import type { PageBreadcrumbItem } from '@/lib/page-breadcrumbs';
 
 export interface MediaItem {
   type: 'image' | 'video';
@@ -26,23 +24,65 @@ interface PortfolioClientProps {
   categories: { id: string; name: string }[];
   allMedia: MediaItem[];
   mediaByCategory: Record<string, MediaItem[]>;
-  breadcrumbs?: PageBreadcrumbItem[];
+}
+
+function PlayIcon() {
+  return (
+    <svg className="h-12 w-12 text-white drop-shadow-md" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  );
+}
+
+function PortfolioImage({
+  src,
+  alt,
+  priority,
+  onOpen,
+}: {
+  src: string;
+  alt: string;
+  priority?: boolean;
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className="group relative block w-full overflow-hidden"
+      aria-label={`View ${alt} full size`}
+    >
+      <Image
+        src={src}
+        alt={alt}
+        width={0}
+        height={0}
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        className="h-auto w-full transition-transform duration-500 group-hover:scale-[1.02]"
+        style={{ width: '100%', height: 'auto' }}
+        priority={priority}
+      />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/55 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <p className="text-left text-sm font-medium text-white">{alt}</p>
+      </div>
+    </button>
+  );
 }
 
 export default function PortfolioClient({
   categories,
   allMedia,
   mediaByCategory,
-  breadcrumbs,
 }: PortfolioClientProps) {
   const [activeCategory, setActiveCategory] = useState('all');
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
 
   const filteredMedia =
-    activeCategory === 'all'
-      ? allMedia
-      : mediaByCategory[activeCategory] ?? [];
+    activeCategory === 'all' ? allMedia : mediaByCategory[activeCategory] ?? [];
+
+  const activeLabel =
+    categories.find((cat) => cat.id === activeCategory)?.name ?? 'Gallery';
 
   const openLightbox = (mediaItem: MediaItem) => {
     setSelectedMedia(mediaItem);
@@ -56,145 +96,142 @@ export default function PortfolioClient({
 
   return (
     <>
-      <section className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-16">
-        <div className="container mx-auto px-6 pt-28 lg:px-10">
-          {breadcrumbs && (
-            <div className="mb-10">
-              <Breadcrumbs items={breadcrumbs} variant="dark" />
-            </div>
-          )}
-          <h1 className="text-5xl md:text-6xl font-extrabold text-center text-[#012D26] mb-6 leading-tight">
-            Our Visual Journey
-          </h1>
-          <p className="max-w-4xl mx-auto text-center text-xl text-gray-700 mb-10 italic">
-            Every click tells a story. Explore our curated collection of moments, captured through the lens and brought to life through light and emotion.
-          </p>
+      <main id="portfolio-gallery" className="bg-white">
+        <section className="mx-auto max-w-[90rem] px-4 py-12 sm:px-6 lg:py-16">
+          <div className="max-w-2xl">
+            <h2 className="font-serif text-2xl font-medium text-[#012D26] sm:text-3xl">
+              Gallery: {activeLabel}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-gray-600">
+              Uncle Westiee Studios portfolio — full-size wedding, event, portrait, and film work
+              across Kenya. Tap to enlarge or open a photo&apos;s detail page.
+            </p>
+          </div>
 
-          <div className="flex flex-wrap justify-center gap-4 mb-16">
+          <nav className="mt-8 flex flex-wrap gap-2" aria-label="Portfolio categories">
             {categories.map((cat) => (
               <button
                 key={cat.id}
+                type="button"
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-6 py-3 rounded-full text-lg font-semibold transition-all duration-300
-                  ${activeCategory === cat.id
-                    ? 'bg-[#012D26] text-white shadow-lg'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                  activeCategory === cat.id
+                    ? 'bg-[#012D26] text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                aria-current={activeCategory === cat.id ? 'true' : undefined}
               >
                 {cat.name}
               </button>
             ))}
-          </div>
+          </nav>
 
-          <h2 className="text-3xl md:text-4xl font-bold text-center text-[#012D26] mb-16 relative pb-6">
-            <span className="relative z-10">
-              {categories.find((cat) => cat.id === activeCategory)?.name ?? 'Gallery'}
-            </span>
-            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-[#012D26] rounded-full opacity-70" />
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 mb-24">
+          <div className="mt-10 columns-1 gap-4 sm:columns-2 lg:columns-3">
             {filteredMedia.length > 0 ? (
               filteredMedia.map((mediaItem, index) => (
-                <div
+                <article
                   key={`${mediaItem.type}-${mediaItem.src ?? mediaItem.videoId ?? mediaItem.title}-${index}`}
-                  className="relative w-full overflow-hidden group rounded-md shadow-md hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ease-in-out"
+                  className="mb-4 break-inside-avoid"
                 >
-                  <div className="relative w-full" style={{ paddingTop: '100%' }}>
-                    {mediaItem.type === 'image' ? (
-                      <>
-                        <button
-                          type="button"
-                          onClick={() => openLightbox(mediaItem)}
-                          className="absolute inset-0 w-full h-full cursor-pointer"
-                          aria-label={`View ${mediaItem.alt} in lightbox`}
-                        >
-                          <Image
-                            src={mediaItem.src!}
-                            alt={mediaItem.alt || 'Gallery image'}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-110 group-hover:brightness-75"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            priority={index < 4}
-                          />
-                        </button>
-                        {mediaItem.slug && (
+                  {mediaItem.type === 'image' ? (
+                    <div className="group">
+                      <PortfolioImage
+                        src={mediaItem.src!}
+                        alt={mediaItem.alt || mediaItem.title || 'Gallery image'}
+                        priority={index < 4}
+                        onOpen={() => openLightbox(mediaItem)}
+                      />
+                      {mediaItem.slug ? (
+                        <h3 className="mt-2 text-sm font-medium leading-snug">
                           <Link
                             href={`/portfolio/${mediaItem.slug}`}
-                            className="absolute top-3 right-3 z-10 bg-white/90 text-[#012D26] text-xs font-semibold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={(e) => e.stopPropagation()}
+                            className="text-[#012D26] hover:underline"
                           >
-                            View details
+                            {mediaItem.title || mediaItem.alt}
                           </Link>
-                        )}
-                        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 flex items-end justify-start p-4 transition-opacity duration-300">
-                          <p className="text-white text-lg font-semibold tracking-wide capitalize">
-                            {mediaItem.alt}
-                          </p>
-                        </div>
-                      </>
-                    ) : mediaItem.videoSource === 'upload' && mediaItem.src ? (
+                        </h3>
+                      ) : (
+                        mediaItem.title && (
+                          <p className="mt-2 text-sm font-medium text-gray-800">{mediaItem.title}</p>
+                        )
+                      )}
+                    </div>
+                  ) : mediaItem.videoSource === 'upload' && mediaItem.src ? (
+                    <div>
                       <button
                         type="button"
                         onClick={() => openLightbox(mediaItem)}
-                        className="absolute inset-0 w-full h-full cursor-pointer"
+                        className="group relative block w-full overflow-hidden"
                         aria-label={`Play video ${mediaItem.title}`}
                       >
-                        <video
-                          src={mediaItem.src}
-                          muted
-                          playsInline
-                          preload="metadata"
-                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                        <div className="p-4 bg-white absolute bottom-0 left-0 right-0 text-left">
-                          <p className="text-lg font-semibold text-gray-800">{mediaItem.title}</p>
-                          <p className="text-sm text-gray-500 line-clamp-2">{mediaItem.description}</p>
-                        </div>
+                      <video
+                        src={mediaItem.src}
+                        muted
+                        playsInline
+                        preload="metadata"
+                        className="h-auto w-full"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors group-hover:bg-black/35">
+                        <PlayIcon />
+                      </div>
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-left">
+                        <p className="text-sm font-medium text-white">{mediaItem.title}</p>
+                      </div>
                       </button>
-                    ) : (
+                      {mediaItem.title && (
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">{mediaItem.title}</h3>
+                      )}
+                    </div>
+                  ) : (
+                    <div>
                       <button
                         type="button"
                         onClick={() => openLightbox(mediaItem)}
-                        className="absolute inset-0 w-full h-full cursor-pointer"
+                        className="group relative block w-full overflow-hidden"
                         aria-label={`Play video ${mediaItem.title}`}
                       >
-                        <Image
-                          src={getYouTubeThumbnail(mediaItem.videoId!)}
-                          alt={`Thumbnail for ${mediaItem.title}`}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
-                        </div>
-                        <div className="p-4 bg-white absolute bottom-0 left-0 right-0 text-left">
-                          <p className="text-lg font-semibold text-gray-800">{mediaItem.title}</p>
-                          <p className="text-sm text-gray-500 line-clamp-2">{mediaItem.description}</p>
-                        </div>
+                      <Image
+                        src={getYouTubeThumbnail(mediaItem.videoId!)}
+                        alt={`Thumbnail for ${mediaItem.title}`}
+                        width={0}
+                        height={0}
+                        sizes="(max-width: 640px) 100vw, 50vw"
+                        className="h-auto w-full"
+                        style={{ width: '100%', height: 'auto' }}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors group-hover:bg-black/35">
+                        <PlayIcon />
+                      </div>
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-4 text-left">
+                        <p className="text-sm font-medium text-white">{mediaItem.title}</p>
+                      </div>
                       </button>
-                    )}
-                  </div>
-                </div>
+                      {mediaItem.title && (
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">{mediaItem.title}</h3>
+                      )}
+                    </div>
+                  )}
+                </article>
               ))
             ) : (
-              <p className="col-span-full text-center text-gray-600 text-xl">No media found for this category.</p>
+              <p className="py-12 text-center text-sm text-gray-600">No media found for this category.</p>
             )}
           </div>
-        </div>
-      </section>
 
-      {lightboxOpen && (
-        <LightboxModal media={selectedMedia} onClose={closeLightbox} />
-      )}
+          <p className="mt-12 text-center text-sm text-gray-500">
+            Like what you see?{' '}
+            <Link href="/packages" className="font-medium text-[#012D26] hover:underline">
+              View packages
+            </Link>
+            {' · '}
+            <Link href="/contact" className="font-medium text-[#012D26] hover:underline">
+              Book a session
+            </Link>
+          </p>
+        </section>
+      </main>
+
+      {lightboxOpen && <LightboxModal media={selectedMedia} onClose={closeLightbox} />}
     </>
   );
 }

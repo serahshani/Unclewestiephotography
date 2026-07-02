@@ -1,17 +1,25 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Camera, Heart, Briefcase, Film, Users, Sparkles, Satellite } from 'lucide-react';
+import { Camera, Briefcase, Sparkles, Satellite } from 'lucide-react';
 import PageHero from '@/components/layout/PageHero';
+import { FEATURED_SERVICES, SUPPORTING_SERVICES } from '@/lib/services-data';
 import { SERVICES_BREADCRUMBS } from '@/lib/page-breadcrumbs';
+
+const SUPPORTING_ICONS = {
+  'Commercial & Product': Briefcase,
+  'Professional Videography': Camera,
+  'Drone Services': Satellite,
+  'Expert Retouching & Editing': Sparkles,
+};
 
 export default function ServicesPage() {
   return (
     <>
       <PageHero
         image="/Servicespagehero.jpg"
-        imageAlt="Diverse Studios Services"
-        title="Tailored Studios & Videography Services"
-        subtitle="Your vision, beautifully captured. Explore our range of professional services."
+        imageAlt="Photography and videography services by Uncle Westiee Studios in Kenya"
+        title="Photography & Videography Services"
+        subtitle="Wedding, portrait, event, and commercial coverage — Nairobi, Samburu, and across Kenya."
         breadcrumbs={SERVICES_BREADCRUMBS}
         heightClass="h-[600px] max-h-[80vh]"
         imagePosition="object-[center_25%]"
@@ -19,169 +27,129 @@ export default function ServicesPage() {
         priority
       />
 
-      {/* Services Overview Section (Target for Navbar link) */}
-      <section id="services-section" className="py-20 px-6 bg-gradient-to-br from-gray-100 to-white">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-4xl md:text-5xl font-bold text-center text-green-800 mb-12 relative pb-6">
-            <span className="relative z-10">What We Offer</span>
-            <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-2 bg-green-600 rounded-full opacity-70"></span>
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {/* Service Item 1: Wedding Studios */}
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 group">
-              <div className="flex justify-center mb-6">
-                <Heart size={48} className="text-green-600 group-hover:text-green-700 transition-colors duration-300" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Wedding Studios</h3>
-              <p className="text-gray-700 mb-4 text-center">
-                Capture the magic and emotion of your special day. From intimate ceremonies to grand celebrations, we ensure every precious moment is preserved beautifully.
+      <main id="services-section">
+        <section className="bg-white px-6 py-24">
+          <div className="container mx-auto max-w-5xl">
+            <div className="mx-auto mb-20 max-w-2xl text-center">
+              <span className="text-sm font-semibold uppercase tracking-widest text-[#012D26]/70">
+                Services
+              </span>
+              <h2 className="mt-3 text-4xl font-bold text-gray-900 md:text-5xl">What We Offer</h2>
+              <div className="mx-auto mt-5 h-1 w-16 rounded-full bg-[#012D26]" />
+              <p className="mt-5 text-lg text-gray-600">
+                Professional photography and videography for weddings, events, portraits, and
+                brands — tailored to the moment you&apos;re trying to capture.{' '}
+                <Link href="/portfolio" className="font-medium text-[#012D26] hover:underline">
+                  View our portfolio
+                </Link>
+                .
               </p>
-              <ul className="list-disc list-inside text-gray-700 text-sm mb-6 space-y-1">
-                <li>Full-day coverage</li>
-                <li>Engagement shoots</li>
-                <li>High-resolution digital gallery</li>
-                <li>Custom album design available</li>
-              </ul>
-              {/* Image removed */}
             </div>
 
-            {/* Service Item 2: Portrait Studios */}
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 group">
-              <div className="flex justify-center mb-6">
-                <Users size={48} className="text-green-600 group-hover:text-green-700 transition-colors duration-300" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Portrait Sessions</h3>
-              <p className="text-gray-700 mb-4 text-center">
-                From striking headshots to heartwarming family portraits, we capture your unique personality and connections in stunning detail.
-              </p>
-              <ul className="list-disc list-inside text-gray-700 text-sm mb-6 space-y-1">
-                <li>Individual & Family portraits</li>
-                <li>Maternity & Newborn shoots</li>
-                <li>Professional Headshots</li>
-                <li>On-location or studio options</li>
-              </ul>
-              {/* Image removed */}
+            <div className="space-y-16 md:space-y-24">
+              {FEATURED_SERVICES.map((service, index) => (
+                <article
+                  id={service.id}
+                  key={service.id}
+                  className={`flex flex-col items-center gap-8 md:gap-12 ${
+                    index % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'
+                  }`}
+                >
+                  <div className="relative h-64 w-full flex-1 overflow-hidden shadow-md md:h-80">
+                    <Image
+                      src={service.image}
+                      alt={service.imageAlt}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                    />
+                  </div>
+                  <div className="flex-1 text-center md:text-left">
+                    <span className="text-sm font-semibold text-[#012D26]/60">{service.number}</span>
+                    <h3 className="mt-2 text-2xl font-bold text-gray-900 md:text-3xl">
+                      {service.title}
+                    </h3>
+                    <p className="mt-4 text-gray-600">{service.description}</p>
+                    <ul className="mt-6 grid grid-cols-1 gap-x-6 gap-y-2 text-sm text-gray-700 sm:grid-cols-2">
+                      {service.features.map((feature) => (
+                        <li
+                          key={feature}
+                          className="flex items-center justify-center gap-2 md:justify-start"
+                        >
+                          <span className="h-1 w-1 flex-shrink-0 rounded-full bg-[#012D26]" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              ))}
             </div>
 
-            {/* Service Item 3: Event Studios */}
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 group">
-              <div className="flex justify-center mb-6">
-                <Film size={48} className="text-green-600 group-hover:text-green-700 transition-colors duration-300" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Event Coverage</h3>
-              <p className="text-gray-700 mb-4 text-center">
-                Ensure every moment of your corporate event, celebration, or public gathering is documented with dynamic and professional imagery.
+            <div className="mt-24">
+              <p className="mb-6 text-center text-sm font-semibold uppercase tracking-widest text-gray-400">
+                Also Available
               </p>
-              <ul className="list-disc list-inside text-gray-700 text-sm mb-6 space-y-1">
-                <li>Corporate events & conferences</li>
-                <li>Birthday parties & anniversaries</li>
-                <li>Concerts & festivals</li>
-                <li>Candid and posed shots</li>
-              </ul>
-              {/* Image removed */}
-            </div>
-
-            {/* Service Item 4: Commercial & Product Studios */}
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 group">
-              <div className="flex justify-center mb-6">
-                <Briefcase size={48} className="text-green-600 group-hover:text-green-700 transition-colors duration-300" />
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                {SUPPORTING_SERVICES.map(({ id, title, description }) => {
+                  const Icon = SUPPORTING_ICONS[title];
+                  return (
+                    <div
+                      id={id}
+                      key={id}
+                      className="rounded-xl border border-gray-200 p-6 transition-colors duration-300 hover:border-[#012D26]/30"
+                    >
+                      <Icon size={22} className="text-[#012D26]" />
+                      <h4 className="mt-3 text-base font-bold text-gray-900">{title}</h4>
+                      <p className="mt-2 text-sm text-gray-600">{description}</p>
+                    </div>
+                  );
+                })}
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Commercial & Product</h3>
-              <p className="text-gray-700 mb-4 text-center">
-                Elevate your brand with captivating commercial imagery and crisp, professional product Studios that drives sales.
-              </p>
-              <ul className="list-disc list-inside text-gray-700 text-sm mb-6 space-y-1">
-                <li>Product Studios for e-commerce</li>
-                <li>Brand storytelling imagery</li>
-                <li>Real estate Studios</li>
-                <li>Customized shoots for marketing</li>
-              </ul>
-              {/* Image removed */}
             </div>
-
-            {/* Service Item 5: Professional Videography */}
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 group">
-              <div className="flex justify-center mb-6">
-                <Camera size={48} className="text-green-600 group-hover:text-green-700 transition-colors duration-300" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Professional Videography</h3>
-              <p className="text-gray-700 mb-4 text-center">
-                Beyond still images, we craft engaging video content for events, businesses, and personal stories, bringing your moments to life.
-              </p>
-              <ul className="list-disc list-inside text-gray-700 text-sm mb-6 space-y-1">
-                <li>Event highlight reels</li>
-                <li>Brand promotional videos</li>
-                <li>Interview style videos</li>
-                <li>Custom cinematic productions</li>
-              </ul>
-              {/* Image removed */}
-            </div>
-
-            {/* Service Item 6: Drone Services (New) */}
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 group">
-              <div className="flex justify-center mb-6">
-                <Satellite size={48} className="text-green-600 group-hover:text-green-700 transition-colors duration-300" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Drone Services</h3>
-              <p className="text-gray-700 mb-4 text-center">
-                Elevate your visuals with breathtaking aerial perspectives. Perfect for landscapes, real estate, events, and unique cinematic shots.
-              </p>
-              <ul className="list-disc list-inside text-gray-700 text-sm mb-6 space-y-1">
-                <li>Aerial photography & videography</li>
-                <li>Real estate & property surveys</li>
-                <li>Event aerial coverage</li>
-                <li>Landscape & tourism visuals</li>
-              </ul>
-              {/* Image removed */}
-            </div>
-
-            {/* Service Item 7: Expert Retouching & Editing (Optional - moved to maintain grid structure) */}
-            <div className="bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 group">
-              <div className="flex justify-center mb-6">
-                <Sparkles size={48} className="text-green-600 group-hover:text-green-700 transition-colors duration-300" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Expert Retouching & Editing</h3>
-              <p className="text-gray-700 mb-4 text-center">
-                Beyond the shoot, our meticulous post-production process ensures every image is polished to perfection, enhancing its natural beauty.
-              </p>
-              <ul className="list-disc list-inside text-gray-700 text-sm mb-6 space-y-1">
-                <li>Color correction & grading</li>
-                <li>Skin retouching & blemish removal</li>
-                <li>Object removal/addition</li>
-                <li>Creative composites</li>
-              </ul>
-              {/* Image removed */}
-            </div>
-
-          </div> {/* End of grid */}
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="bg-green-900 text-white py-16 text-center">
-        <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold mb-6">Ready to Capture Your Vision?</h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">
-            Browse our tailored packages or contact us for a custom quote on your next project.
-          </p>
-          <div className="flex justify-center space-x-6">
-            <Link
-              href="/packages"
-              className="bg-white text-green-900 font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-gray-200 transition-all duration-300 transform hover:scale-105"
-            >
-              View Packages
-            </Link>
-            <Link
-              href="/contact"
-              className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-white hover:text-green-900 transition-all duration-300 transform hover:scale-105"
-            >
-              Get a Custom Quote
-            </Link>
           </div>
-        </div>
-      </section>
+        </section>
 
+        <section
+          className="bg-gray-50 px-4 py-12 sm:px-6"
+          aria-label="Book photography and videography services"
+        >
+          <div className="mx-auto flex w-full max-w-6xl flex-col overflow-hidden rounded-3xl shadow-md md:flex-row md:min-h-[420px]">
+            <div className="relative aspect-[4/5] w-full shrink-0 bg-neutral-300 sm:aspect-[3/4] md:aspect-auto md:w-[42%] md:min-h-[420px]">
+              <Image
+                src="/family.jpg"
+                alt="Book wedding, portrait, and event photography with Uncle Westiee Studios"
+                fill
+                className="object-contain object-center"
+                sizes="(max-width: 768px) 100vw, 480px"
+                priority={false}
+              />
+            </div>
+            <div className="flex flex-1 flex-col items-center justify-center bg-gray-900 px-6 py-12 text-center text-white sm:px-10 sm:py-14">
+              <h2 className="text-2xl font-bold sm:text-3xl md:text-4xl">
+                Ready to Capture Your Vision?
+              </h2>
+              <p className="mx-auto mt-4 mb-8 max-w-md text-sm text-white/85 sm:text-base md:text-lg">
+                Browse our packages or contact us for a custom quote on your next project.
+              </p>
+              <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
+                <Link
+                  href="/packages"
+                  className="inline-block rounded-lg bg-white py-2.5 px-6 text-sm font-bold text-gray-900 shadow-lg transition-all duration-300 hover:bg-gray-100 sm:py-3 sm:px-8 sm:text-base"
+                >
+                  View Packages
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-block rounded-lg border-2 border-white py-2.5 px-6 text-sm font-bold text-white transition-all duration-300 hover:bg-white hover:text-gray-900 sm:py-3 sm:px-8 sm:text-base"
+                >
+                  Get a Custom Quote
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
     </>
   );
 }
