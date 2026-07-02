@@ -1,67 +1,79 @@
 import Image from 'next/image';
+import Link from 'next/link';
+
+const HIGHLIGHTS = [
+  {
+    image: '/Gallery2.jpg',
+    alt: 'Landscape photography in Samburu, Kenya',
+    label: 'Scenic locations',
+    text: 'From Samburu sunsets to Nairobi cityscapes — we find the light.',
+  },
+  {
+    image: '/couple.jpg',
+    alt: 'Couple portrait session in Kenya',
+    label: 'Every story',
+    text: 'Weddings, couples, families, and solo portraits — told your way.',
+  },
+  {
+    image: '/Packages.jpg',
+    alt: 'Wedding photography by Uncle Westiee Studios',
+    label: 'Full-day coverage',
+    text: 'Candid moments and posed portraits, seamlessly woven together.',
+  },
+  {
+    image: '/family.jpg',
+    alt: 'Family photography session in Kenya',
+    label: 'Personal touch',
+    text: 'One team, one vision — from first call to final gallery delivery.',
+  },
+];
 
 export default function ServicesPage() {
   return (
-    <>
-      {/* Scenic Serenity Feature Grid */}
-      <section className="bg-gray-200 text-center py-20 px-6 sm:px-10"> {/* Increased vertical padding and horizontal padding */}
-        <h2 className="text-3xl md:text-5xl font-extrabold text-[#012D26] mb-6 leading-tight"> {/* Larger, bolder, and more prominent */}
-          Destination photographer based in <span className="text-[#012D26]">Samburu, Kenya</span>.
-        </h2>
-        <p className="max-w-4xl mx-auto text-lg md:text-xl text-gray-800 mb-16 italic font-medium"> {/* Larger, italic, and slightly darker text */}
-          Experience the magic of <span className="font-semibold text-[#012D26]">Samburu</span> as the perfect backdrop for your special
-          moments with <span className="text-[#012D26] font-bold">Uncle Westiee Studios</span>. Whether it’s intimate couples’
-          portraits, joyous family gatherings, or elegant fashion shoots, bespoke
-          Studios packages are designed to meet your needs and exceed your
-          expectations. From solo portraits to grand wedding celebrations, each
-          photo tells your unique story.
-        </p>
-
-        <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-16 relative"> {/* Larger, bold, and added relative for pseudo-element */}
-          Capturing Moments, Creating Memories
-          <span className="absolute left-1/2 transform -translate-x-1/2 bottom-[-15px] h-1.5 w-24 bg-[#012D26] rounded-full"></span> {/* Simple underline effect */}
-        </h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 max-w-7xl mx-auto"> {/* Adjusted gap and max-width for more breathing room */}
-          {/* Scenic Serenity */}
-          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300"> {/* Added padding, background, shadow, and hover effect */}
-            <svg className="w-16 h-16 text-[#012D26] mb-6" fill="currentColor" viewBox="0 0 24 24"> {/* Larger icon */}
-              <path d="M5 3a2 2 0 0 0-2 2v14l4-4h13a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5z"/>
-            </svg>
-            <h4 className="font-extrabold text-lg tracking-wider uppercase text-gray-900 mb-2">Scenic Serenity</h4> {/* Larger and bolder title */}
-            <p className="text-base text-gray-700 leading-relaxed">Perfect Locations Found for Every Shoot.</p> {/* Larger text with improved line height */}
-          </div>
-          {/* Memories Made Easy */}
-          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
-            <svg className="w-16 h-16 text-[#012D26] mb-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M4 4h4l2-2h4l2 2h4a2 2 0 0 1 2 2v3H2V6a2 2 0 0 1 2-2zm-2 7h20v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9z"/>
-            </svg>
-            <h4 className="font-extrabold text-lg tracking-wider uppercase text-gray-900 mb-2">Memories Made Easy</h4>
-            <p className="text-base text-gray-700 leading-relaxed">Effortless Studios Solutions for Your Special Day.</p>
-          </div>
-          {/* Personalized Service */}
-          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
-            <svg className="w-16 h-16 text-[#012D26] mb-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M17 20h5v2h-5v-2zM2 2h20v2H2V2zm0 6h20v2H2V8zm0 6h20v2H2v-2z"/>
-            </svg>
-            <h4 className="font-extrabold text-lg tracking-wider uppercase text-gray-900 mb-2">Personalized Service</h4>
-            <p className="text-base text-gray-700 leading-relaxed">
-              Receive personalized attention and care throughout the entire Studios
-              process, ensuring your vision is brought to life.
-            </p>
-          </div>
-          {/* Make a Statement */}
-          <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
-            <svg className="w-16 h-16 text-[#012D26] mb-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 2l2.09 6.26L20 9.27l-5 3.64L16.18 21 12 17.27 7.82 21 9 12.91 4 9.27l5.91-.91L12 2z"/>
-            </svg>
-            <h4 className="font-extrabold text-lg tracking-wider uppercase text-gray-900 mb-2">Make a Statement</h4>
-            <p className="text-base text-gray-700 leading-relaxed">
-              With fashion-forward imagery that elevates your personality or brand and captivates your audience.
-            </p>
-          </div>
+    <section className="bg-white px-4 py-14 sm:px-6 sm:py-20 md:py-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="max-w-3xl">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#012D26]/70 sm:text-sm">
+            Based in Samburu, Kenya
+          </p>
+          <h2 className="mt-3 font-serif text-3xl font-medium leading-tight text-gray-900 sm:text-4xl md:text-5xl">
+            Destination photography for moments that matter
+          </h2>
+          <p className="mt-5 text-base leading-relaxed text-gray-600 sm:text-lg">
+            Uncle Westiee Studios captures weddings, portraits, and events across Nairobi,
+            Samburu, Maralal, and nationwide — with an eye for emotion and a respect for your
+            story.
+          </p>
+          <Link
+            href="/services"
+            className="mt-6 inline-block text-sm font-semibold text-[#012D26] underline underline-offset-4 hover:text-[#014a3d]"
+          >
+            See all services
+          </Link>
         </div>
-      </section>
-    </>
+
+        <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4 lg:gap-5">
+          {HIGHLIGHTS.map((item) => (
+            <figure key={item.label} className="group">
+              <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  fill
+                  className="object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                />
+              </div>
+              <figcaption className="mt-4">
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#012D26]/80">
+                  {item.label}
+                </p>
+                <p className="mt-1.5 text-sm leading-relaxed text-gray-600">{item.text}</p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

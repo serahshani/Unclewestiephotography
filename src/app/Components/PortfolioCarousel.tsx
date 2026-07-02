@@ -1,19 +1,19 @@
 'use client';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay } from 'swiper/modules';
+import { Autoplay } from 'swiper/modules';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import 'swiper/css';
-import 'swiper/css/navigation';
+import { getDefaultGalleryImages } from '@/lib/default-content';
 
-const defaultImages = [
-  { src: '/Gallery1.jpg', alt: 'University Campus' },
-  { src: '/Gallery2.jpg', alt: 'Beautiful Landscape with Mountains' },
-  { src: '/Gallery3.jpg', alt: 'Professional Studios Setup' },
-  { src: '/Gallery4.jpg', alt: 'Stunning Aurora Borealis' },
-];
+const defaultImages = getDefaultGalleryImages()
+  .filter((img) => img.featured)
+  .map((img) => ({
+    src: img.imagePath,
+    alt: img.altText,
+  }));
 
 interface PortfolioCarouselProps {
   images?: { src: string; alt: string }[];
@@ -23,43 +23,56 @@ export default function PortfolioCarousel({ images }: PortfolioCarouselProps) {
   const portfolioImages = images && images.length > 0 ? images : defaultImages;
 
   return (
-    <section className="bg-gray-200 py-16 px-4 text-center">
-      <h2 className="text-3xl font-serif font-semibold mb-10 text-gray-800">
-        Our Latest Work
-      </h2>
-      <div className="max-w-3xl mx-auto relative">
-        <Swiper
-          modules={[Autoplay, Navigation]}
-          navigation={true}
-          autoplay={{ delay: 3000, disableOnInteraction: false }}
-          loop={true}
-          spaceBetween={10}
-          slidesPerView={1}
-          className="mySwiper"
-        >
-          {portfolioImages.map((image, idx) => (
-            <SwiperSlide key={idx}>
-              <div className="relative w-full h-200 md:h-[700px] rounded-md overflow-hidden shadow-lg">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  quality={80}
-                  priority={idx === 0}
-                  fill={true}
-                  sizes="(max-width: 768px) 100vw, 768px"
-                  className="object-cover"
-                />
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+    <section className="overflow-hidden bg-white px-4 py-14 sm:px-6 sm:py-20 md:py-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#012D26]/70 sm:text-sm">
+              Portfolio
+            </p>
+            <h2 className="mt-2 font-serif text-3xl font-medium text-gray-900 sm:text-4xl">
+              Selected work
+            </h2>
+          </div>
+          <Link
+            href="/portfolio"
+            className="text-sm font-semibold text-[#012D26] underline underline-offset-4 hover:text-[#014a3d]"
+          >
+            View full gallery
+          </Link>
+        </div>
+
+        <div className="relative [&_.swiper-slide]:[backface-visibility:hidden] [&_.swiper-slide]:[transform:translateZ(0)]">
+          <Swiper
+            modules={[Autoplay]}
+            autoplay={{ delay: 4500, disableOnInteraction: false }}
+            loop={portfolioImages.length > 1}
+            spaceBetween={16}
+            slidesPerView={1.15}
+            breakpoints={{
+              640: { slidesPerView: 1.5, spaceBetween: 20 },
+              1024: { slidesPerView: 2.2, spaceBetween: 24 },
+            }}
+            className="!overflow-visible"
+          >
+            {portfolioImages.map((image, idx) => (
+              <SwiperSlide key={`${image.src}-${idx}`}>
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    quality={92}
+                    priority={idx < 3}
+                    sizes="(max-width: 640px) 92vw, (max-width: 1024px) 55vw, 640px"
+                    className="object-cover object-center"
+                  />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
-      <Link
-        href="/portfolio"
-        className="mt-10 inline-block bg-green-900 text-white font-serif px-8 py-3 rounded-lg shadow-md hover:bg-green-700 transition-colors duration-300 transform hover:-translate-y-1"
-      >
-        View Full Gallery
-      </Link>
     </section>
   );
 }

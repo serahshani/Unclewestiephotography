@@ -26,7 +26,7 @@ const GALLERY_SOURCE = [
   { title: 'Portrait Session', imagePath: '/Gallery1.jpg', altText: 'Portrait Session', category: 'portraits', featured: true },
   { title: 'Landscape View', imagePath: '/Gallery2.jpg', altText: 'Landscape View', category: 'landscapes', featured: true },
   { title: 'Fashion Shoot', imagePath: '/Gallery3.jpg', altText: 'Fashion Shoot', category: 'fashion', featured: true },
-  { title: 'Event Coverage', imagePath: '/Gallery4.jpg', altText: 'Event Coverage', category: 'events', featured: false },
+  { title: 'Event Coverage', imagePath: '/Gallery4.jpg', altText: 'Event Coverage', category: 'events', featured: true },
   { title: 'Wildlife Capture', imagePath: '/Gallery5.jpg', altText: 'Wildlife Capture', category: 'wildlife', featured: false },
   { title: 'Nature Beauty', imagePath: '/Hero2.jpg', altText: 'Nature Beauty', category: 'landscapes', featured: false },
   { title: 'Urban Exploration', imagePath: '/Hero3.jpg', altText: 'Urban Exploration', category: 'urban', featured: false },

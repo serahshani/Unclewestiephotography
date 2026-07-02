@@ -1,50 +1,50 @@
-
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function AboutPage() {
   return (
-    <>
-
-      {/* Personal Bio Section */}
-      <section id="about" className="py-16 px-4 bg-white">
-        <h2 className="text-4xl font-serif text-center text-[#012D26] mb-12">About me</h2>
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center md:space-x-12">
-          {/* Photo */}
-          <div className="w-full md:w-1/2 mb-8 md:mb-0">
-            <Image
-              src="/Westiee-about.jpeg"  
-              alt="Westiee Studios"
-              width={600}
-              height={800}
-              className="rounded-lg object-cover"
-            />
-          </div>
-
-          {/* Text */}
-          <div className="w-full md:w-1/2 text-black space-y-6">
-            <p>
-              Welcome to my world of Studios! My name is Uncle Westiee, I’m a passionate
-              photographer based in Samburu, Kenya. With a keen eye for detail and a love for capturing
-              life’s most precious moments, I specialize in wedding, portrait, and
-              fashion Studios.
-            </p>
-            <p>
-              My journey has taken me across the globe, but Samuru’s enchanting
-              sunsets and stunning vistas have become my muse. As a destination
-              photographer, I am thrilled to offer my services not only here in
-              Nairobi but worldwide, creating timeless memories wherever your
-              story unfolds.
-            </p>
-            <p>
-              On this page, you’ll find a variety of Studios packages tailored
-              to your needs, including solo portraits, couple sessions,
-              engagements, weddings, and family photoshoots. I am dedicated to
-              capturing your unique story with creativity and professionalism.
-            </p>
-            <p>Let’s create beautiful memories together, one snapshot at a time!</p>
-          </div>
+    <section id="about" className="bg-[#f8f7f4] px-4 py-14 sm:px-6 sm:py-20 md:py-24">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div className="relative aspect-[4/5] w-full min-h-[320px] overflow-hidden sm:min-h-[380px] md:min-h-[480px]">
+          <Image
+            src="/Westiee-about.jpeg"
+            alt="Uncle Westiee — wedding and portrait photographer in Kenya"
+            fill
+            className="object-cover object-center"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
         </div>
-      </section>
-    </>
+
+        <div className="text-gray-800">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#012D26]/70 sm:text-sm">
+            The photographer
+          </p>
+          <h2 className="mt-3 font-serif text-3xl font-medium text-gray-900 sm:text-4xl">
+            Uncle Westiee
+          </h2>
+          <div className="mt-5 space-y-4 text-sm leading-relaxed text-gray-700 sm:text-base">
+            <p>
+              I&apos;m a photographer based in Samburu, Kenya — drawn to honest light, real
+              emotion, and the quiet in-between moments that become your favourite memories.
+            </p>
+            <p>
+              Weddings, portraits, fashion, and events have taken me from Nairobi to destinations
+              across the country. Samburu&apos;s golden hour is still home, but your story can be
+              told wherever it unfolds.
+            </p>
+            <p>
+              Every session is collaborative: we plan together, shoot with intention, and deliver
+              a gallery you&apos;ll want to return to for years.
+            </p>
+          </div>
+          <Link
+            href="/about"
+            className="mt-8 inline-block border border-[#012D26] px-6 py-2.5 text-sm font-semibold text-[#012D26] transition-colors hover:bg-[#012D26] hover:text-white"
+          >
+            Read our full story
+          </Link>
+        </div>
+      </div>
+    </section>
   );
 }

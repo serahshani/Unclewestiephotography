@@ -8,6 +8,7 @@ import {
   MAX_HERO_SIZE_BYTES,
   MAX_VIDEO_SIZE_BYTES,
   formatMaxHeroSizeLabel,
+  formatMaxGallerySizeLabel,
   formatMaxVideoSizeLabel,
 } from '@/lib/upload-limits';
 
@@ -61,7 +62,7 @@ export async function processAndSaveImage(
   const maxSize = type === 'hero' ? MAX_HERO_SIZE : MAX_GALLERY_SIZE;
   if (file.size > maxSize) {
     throw new Error(
-      `File too large. Maximum size is ${type === 'hero' ? formatMaxHeroSizeLabel() : '10MB'}`
+      `File too large. Maximum size is ${type === 'hero' ? formatMaxHeroSizeLabel() : formatMaxGallerySizeLabel()}`
     );
   }
 

@@ -9,18 +9,27 @@ import HomeHero from '@/components/HomeHero';
 import JsonLd from '@/components/seo/JsonLd';
 import { getPublishedHero, getGalleryImages } from '@/lib/data';
 import { getSiteUrl } from '@/lib/api-utils';
-import { organizationSchema, websiteSchema, webPageSchema } from '@/lib/seo/schemas';
+import {
+  itemListSchema,
+  organizationSchema,
+  websiteSchema,
+  webPageSchema,
+} from '@/lib/seo/schemas';
 import { createPageMetadata } from '@/lib/seo/metadata';
+import { SITE_NAME } from '@/lib/site-config';
 
 export const dynamic = 'force-dynamic';
 
+const PAGE_TITLE = 'Wedding & Portrait Photography in Kenya';
+const PAGE_DESCRIPTION =
+  'Uncle Westiee Studios — wedding, portrait, and event photography and videography in Nairobi, Samburu, Maralal, and across Kenya. View our portfolio and book your session on WhatsApp.';
+
 export const metadata: Metadata = createPageMetadata({
-  title: 'Kenya Photography & Videography',
-  description:
-    'Uncle Westiee Studios – professional wedding, event, and portrait photography and videography in Kenya. View our portfolio and book your session.',
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   path: '/',
   keywords:
-    'photography Kenya, videography Nairobi, wedding photographer Kenya, Uncle Westiee Studios',
+    'wedding photographer Kenya, portrait photography Nairobi, Uncle Westiee Studios, videography Kenya, event photographer Samburu, family photoshoot Kenya, wedding videography Maralal, photography packages Kenya',
   image: '/Hero1.webp',
 });
 
@@ -31,7 +40,12 @@ export default async function Home() {
   ]);
 
   const siteUrl = getSiteUrl();
-  const heroTitle = hero.typewriterWords.join(' ') || 'Uncle Westiee Studios';
+  const heroTitle = hero.typewriterWords.join(' ') || SITE_NAME;
+  const featuredListItems = featuredImages.slice(0, 10).map((img) => ({
+    name: img.title,
+    url: img.slug ? `/portfolio/${img.slug}` : '/portfolio',
+    image: img.imagePath,
+  }));
 
   return (
     <PublicLayout>
@@ -42,9 +56,12 @@ export default async function Home() {
           webPageSchema(
             siteUrl,
             '/',
-            heroTitle,
-            'Professional photography and videography services in Kenya'
+            `${PAGE_TITLE} | ${SITE_NAME}`,
+            PAGE_DESCRIPTION
           ),
+          ...(featuredListItems.length > 0
+            ? [itemListSchema(siteUrl, `${SITE_NAME} Featured Photography`, featuredListItems)]
+            : []),
         ]}
       />
       <HomeHero

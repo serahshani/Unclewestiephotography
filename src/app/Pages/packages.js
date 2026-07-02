@@ -1,50 +1,45 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image'; // Import the Next.js Image component
-
-const PHONE_NUMBER = '+254791264173'; // ← replace with your WhatsApp number (no “+”, no spaces)
-const WHATSAPP_BASE = `https://wa.me/${PHONE_NUMBER}`;
+import Image from 'next/image';
+import Link from 'next/link';
+import { CONTACT } from '@/lib/site-config';
 
 const PACKAGES = [
   {
     id: 'solo',
     title: 'Solo Photoshoot',
-    image: '/solo.jpg', // Replace with your image path or URL
+    image: '/solo.jpg',
     bullets: [
       'Scenic view location',
       '12 professionally edited photos (selected by you)',
     ],
-    description: 'Perfect for personal branding, modeling, or just capturing your essence.',
-    quote: '"Great photography is about depth of feeling, not depth of field." – Peter Adams',
+    description: 'Perfect for personal branding, modeling, or capturing your essence.',
   },
   {
     id: 'couple',
-    title: 'Couple Photoshoot / Proposal',
-    image: '/couple.jpg', // Replace with your image path or URL
+    title: 'Couple / Proposal',
+    image: '/couple.jpg',
     bullets: [
       'Scenic view location',
       '15 professionally edited photos (selected by you)',
     ],
     description: 'Capture your love story or that special proposal moment.',
-    quote: '"Photography is a way of feeling, of touching, of loving. What you have caught on film is captured forever… it remembers little things, long after you have forgotten everything." – Aaron Siskind',
   },
   {
     id: 'family',
     title: 'Family Photoshoot',
-    image: '/family.jpg', // Replace with your image path or URL
+    image: '/family.jpg',
     bullets: [
       'Scenic view location',
       '3 pax included',
       '12 professionally edited photos',
     ],
     description: 'Ideal for family portraits, reunions, or special occasions.',
-    quote: '"The best thing about a picture is that it never changes, even when the people in it do." – Andy Warhol',
   },
 ];
 
 export default function Packages() {
-  // track duration per package id (defaults to '1')
   const [durations, setDurations] = useState(
     PACKAGES.reduce((acc, pkg) => ({ ...acc, [pkg.id]: '1' }), {})
   );
@@ -57,81 +52,103 @@ export default function Packages() {
   };
 
   return (
-    <section id="packages" className="bg-gray-200 py-16 px-4">
-      <h2 className="text-4xl font-serif text-center text-[#012D26] mb-12">Packages</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-        {PACKAGES.map((pkg) => {
-          const dur = durations[pkg.id];
-          const message = `Hello! I'd like to book the *${pkg.title}* package for *${dur} hour(s)*.`;
-          const waLink = `${WHATSAPP_BASE}?text=${encodeURIComponent(message)}`;
+    <section id="packages" className="bg-white px-4 py-14 sm:px-6 sm:py-20 md:py-24">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#012D26]/70 sm:text-sm">
+              Portrait sessions
+            </p>
+            <h2 className="mt-2 font-serif text-3xl font-medium text-gray-900 sm:text-4xl">
+              Session packages
+            </h2>
+            <p className="mt-3 max-w-xl text-sm text-gray-600 sm:text-base">
+              On-location shoots with edited digital galleries. Toggle duration, then inquire on
+              WhatsApp.
+            </p>
+          </div>
+          <Link
+            href="/packages"
+            className="text-sm font-semibold text-[#012D26] underline underline-offset-4 hover:text-[#014a3d]"
+          >
+            All packages
+          </Link>
+        </div>
 
-          return (
-            <div
-              key={pkg.id}
-              className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col
-                         transform transition-all duration-300 hover:scale-105 hover:shadow-xl" // Added animation classes
-            >
-              {/* Title */}
-              <h3 className="text-center text-lg text-[#012D26] font-serif font-semibold py-4">
-                {pkg.title}
-              </h3>
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8">
+          {PACKAGES.map((pkg) => {
+            const dur = durations[pkg.id];
+            const message = `Hello! I'd like to book the *${pkg.title}* package for *${dur} hour(s)*.`;
+            const waLink = `${CONTACT.whatsapp}?text=${encodeURIComponent(message)}`;
 
-              {/* Image */}
-              <div className="flex-1">
-                <Image
-                  src={pkg.image}
-                  alt={pkg.title}
-                  width={500} // Example width, adjust as needed
-                  height={300} // Example height, adjust as needed
-                  className="w-full h-48 object-cover"
-                />
-              </div>
-
-              {/* Duration Toggle */}
-              <div className="flex items-center text-[#012D26] justify-center py-4 space-x-4">
-                <span className="text-sm">1 hour</span>
-                <label className="inline-flex relative items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={dur === '2'}
-                    onChange={() => toggleDuration(pkg.id)}
-                    className="sr-only peer"
+            return (
+              <article key={pkg.id} className="flex flex-col">
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-100">
+                  <Image
+                    src={pkg.image}
+                    alt={pkg.title}
+                    fill
+                    className="object-cover object-center"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
-                  <div className="w-10 h-4 bg-gray-300 peer-checked:bg-gray-500 rounded-full peer-focus:ring-2 peer-focus:ring-gray-400 transition-colors" />
-                  <div className="absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full peer-checked:translate-x-6 transition-transform" />
-                </label>
-                <span className="text-sm">2 hours</span>
-              </div>
+                </div>
 
-              {/* Price & Details */}
-              <div className="px-6 pb-6">
-                <ul className="text-sm text-gray-600 list-disc list-inside space-y-1 mb-4">
-                  <li>{dur} hour{dur !== '1' && 's'}</li>
-                  {pkg.bullets.map((b, i) => (
-                    <li key={i}>{b}</li>
-                  ))}
-                </ul>
-                <p className="text-sm text-gray-700 mb-4">{pkg.description}</p>
-                {/* New: Display the quote */}
-                {pkg.quote && (
-                  <p className="text-xs italic text-gray-500 mt-2 text-center">
-                    {pkg.quote}
-                  </p>
-                )}
+                <div className="flex flex-1 flex-col border border-t-0 border-gray-200 px-5 py-6">
+                  <h3 className="font-serif text-xl font-medium text-gray-900">{pkg.title}</h3>
+                  <p className="mt-2 text-sm text-gray-600">{pkg.description}</p>
 
-                {/* INQUIRE NOW */}
-                <a
-                  href={waLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-center bg-[#012D26] text-white py-2 rounded hover:bg-gray-800 transition mt-4" // Added mt-4 for spacing
-                >
-                  INQUIRE NOW
-                </a>
-              </div>
-            </div>
-          );
-        })}
+                  <ul className="mt-4 space-y-1.5 text-sm text-gray-700">
+                    <li className="flex gap-2">
+                      <span className="text-[#012D26]">—</span>
+                      <span>
+                        {dur} hour{dur !== '1' ? 's' : ''}
+                      </span>
+                    </li>
+                    {pkg.bullets.map((bullet) => (
+                      <li key={bullet} className="flex gap-2">
+                        <span className="text-[#012D26]">—</span>
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-5 flex items-center justify-between border-t border-gray-100 pt-5">
+                    <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                      Duration
+                    </span>
+                    <label className="relative inline-flex cursor-pointer items-center gap-2.5">
+                      <span className={`text-sm ${dur === '1' ? 'font-semibold text-gray-900' : 'text-gray-500'}`}>
+                        1 hr
+                      </span>
+                      <span className="relative inline-flex h-5 w-10 items-center">
+                        <input
+                          type="checkbox"
+                          checked={dur === '2'}
+                          onChange={() => toggleDuration(pkg.id)}
+                          className="peer sr-only"
+                        />
+                        <span className="h-5 w-10 rounded-full bg-gray-200 transition-colors peer-checked:bg-[#012D26]" />
+                        <span className="absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform peer-checked:translate-x-5" />
+                      </span>
+                      <span className={`text-sm ${dur === '2' ? 'font-semibold text-gray-900' : 'text-gray-500'}`}>
+                        2 hr
+                      </span>
+                    </label>
+                  </div>
+
+                  <a
+                    href={waLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 block bg-[#012D26] py-3 text-center text-sm font-semibold text-white transition-colors hover:bg-[#014a3d]"
+                  >
+                    Inquire on WhatsApp
+                  </a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
