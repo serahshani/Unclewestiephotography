@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Check, Copy, Pencil, Trash2, X } from 'lucide-react';
 import { btnDanger, btnOutline, btnPrimary } from './constants';
+import { normalizeImagePath } from '@/lib/image-path';
 import {
   formatDate,
   formatDateTime,
@@ -178,7 +179,7 @@ export default function GalleryPreviewModal({
         <div className="flex flex-1 items-center justify-center bg-gray-900 p-4 sm:p-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={image.imagePath}
+            src={normalizeImagePath(image.imagePath) || image.imagePath}
             alt={image.altText}
             className="max-h-[70vh] max-w-full rounded-lg object-contain shadow-2xl"
             onLoad={(e) => {

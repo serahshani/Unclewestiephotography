@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Typewriter } from 'react-simple-typewriter';
 import { useState, useEffect, useCallback } from 'react';
+import PublicImage from '@/components/PublicImage';
 
 interface HeroSlide {
   id?: string;
@@ -67,7 +67,7 @@ export default function HomeHero({
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
         >
-          <Image
+          <PublicImage
             src={heroImages[current].imagePath}
             alt={heroImages[current].altText}
             fill
@@ -87,7 +87,7 @@ export default function HomeHero({
           className="mb-4"
         >
           {logoPath ? (
-            <Image
+            <PublicImage
               src={logoPath}
               alt="Uncle Westiee Studios logo"
               width={300}

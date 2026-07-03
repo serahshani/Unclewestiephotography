@@ -1,8 +1,8 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import GalleryViewTracker from '@/components/GalleryViewTracker';
+import PublicImage from '@/components/PublicImage';
 import PublicLayout from '@/components/layout/PublicLayout';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import JsonLd from '@/components/seo/JsonLd';
@@ -108,7 +108,7 @@ export default async function GalleryDetailPage({ params }: Props) {
             </header>
 
             <figure>
-              <Image
+              <PublicImage
                 src={image.imagePath}
                 alt={image.altText}
                 width={0}
@@ -152,7 +152,7 @@ export default async function GalleryDetailPage({ params }: Props) {
                       href={`/portfolio/${item.slug}`}
                       className="group mb-4 block break-inside-avoid overflow-hidden"
                     >
-                      <Image
+                      <PublicImage
                         src={item.imagePath}
                         alt={item.altText}
                         width={0}

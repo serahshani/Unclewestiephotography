@@ -3,6 +3,7 @@
 import { memo } from 'react';
 import { Eye, GripVertical, Pencil, Star, Trash2 } from 'lucide-react';
 import { formatDate } from './utils';
+import { normalizeImagePath } from '@/lib/image-path';
 import type { GalleryImage } from './types';
 
 type GalleryCardProps = {
@@ -85,7 +86,7 @@ function GalleryCard({
         <div className="relative aspect-square overflow-hidden bg-gray-100">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={image.imagePath}
+            src={normalizeImagePath(image.imagePath) || image.imagePath}
             alt={image.altText}
             className="h-full w-full object-cover"
             loading="lazy"

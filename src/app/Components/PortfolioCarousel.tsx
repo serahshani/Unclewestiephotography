@@ -2,8 +2,8 @@
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
-import Image from 'next/image';
 import Link from 'next/link';
+import PublicImage from '@/components/PublicImage';
 
 import 'swiper/css';
 import { getDefaultGalleryImages } from '@/lib/default-content';
@@ -58,7 +58,7 @@ export default function PortfolioCarousel({ images }: PortfolioCarouselProps) {
             {portfolioImages.map((image, idx) => (
               <SwiperSlide key={`${image.src}-${idx}`}>
                 <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
-                  <Image
+                  <PublicImage
                     src={image.src}
                     alt={image.alt}
                     fill

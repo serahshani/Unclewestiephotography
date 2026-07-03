@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import LightboxModal from '@/app/Components/LightboxModal';
+import PublicImage from '@/components/PublicImage';
 import { getYouTubeThumbnail } from '@/lib/youtube';
 import { trackGalleryView } from '@/lib/gallery-view-tracker';
 
@@ -54,7 +55,7 @@ function PortfolioImage({
       className="group relative block w-full overflow-hidden"
       aria-label={`View ${alt} full size`}
     >
-      <Image
+      <PublicImage
         src={src}
         alt={alt}
         width={0}

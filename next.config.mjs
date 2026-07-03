@@ -23,6 +23,14 @@ const nextConfig = {
     },
   },
   images: {
+    localPatterns: [
+      {
+        pathname: '/uploads/**',
+      },
+      {
+        pathname: '/**',
+      },
+    ],
     remotePatterns: [
       {
         protocol: 'https',
@@ -37,6 +45,7 @@ const nextConfig = {
         pathname: '/api/**',
       },
     ],
+    qualities: [75, 92],
   },
   async headers() {
     const securityHeaders = [

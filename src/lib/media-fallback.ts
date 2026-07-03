@@ -2,6 +2,10 @@ import { access } from 'fs/promises';
 import path from 'path';
 import { resolveUploadFilePath } from '@/lib/upload';
 import {
+  isTrustedStoredImagePath,
+  normalizeImagePath,
+} from '@/lib/image-path';
+import {
   DEFAULT_LOGO_PATH,
   DEFAULT_TYPEWRITER_WORDS,
   DEFAULT_HERO_META,
@@ -35,7 +39,17 @@ export async function publicImageExists(imagePath: string): Promise<boolean> {
 }
 
 async function resolveImagePath(imagePath: string, fallbackIndex: number): Promise<string> {
-  if (await publicImageExists(imagePath)) return imagePath;
+  const normalized = normalizeImagePath(imagePath);
+  if (!normalized) {
+    const defaults = getDefaultGalleryImages();
+    return defaults[fallbackIndex % defaults.length].imagePath;
+  }
+
+  if (isTrustedStoredImagePath(normalized)) {
+    return normalized;
+  }
+
+  if (await publicImageExists(normalized)) return normalized;
   const defaults = getDefaultGalleryImages();
   return defaults[fallbackIndex % defaults.length].imagePath;
 }
@@ -48,7 +62,9 @@ export async function resolveHeroSlides<T extends { imagePath: string; altText: 
 
   const resolved = await Promise.all(
     slides.map(async (slide, i) => {
-      if (await publicImageExists(slide.imagePath)) return slide;
+      const normalized = normalizeImagePath(slide.imagePath);
+      if (normalized && isTrustedStoredImagePath(normalized)) return slide;
+      if (normalized && (await publicImageExists(normalized))) return slide;
       const fallback = getDefaultHeroSlideAt(i);
       return {
         ...slide,

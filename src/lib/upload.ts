@@ -18,9 +18,16 @@ const MAX_HERO_SIZE = MAX_HERO_SIZE_BYTES;
 const MAX_GALLERY_SIZE = MAX_GALLERY_SIZE_BYTES;
 const MAX_VIDEO_SIZE = MAX_VIDEO_SIZE_BYTES;
 
-const UPLOAD_PATH_REGEX = /^\/uploads\/(hero|gallery)\/[a-zA-Z0-9._-]+\.webp$/;
-const VIDEO_PATH_REGEX = /^\/uploads\/videos\/[a-zA-Z0-9._-]+\.(mp4|webm|mov)$/;
-const LEGACY_PUBLIC_PATH_REGEX = /^\/[A-Za-z0-9._-]+\.(jpg|jpeg|png|webp|gif)$/i;
+import {
+  isSafeImagePath,
+  isSafeVideoPath,
+  UPLOAD_IMAGE_PATH_REGEX,
+  UPLOAD_VIDEO_PATH_REGEX,
+  type UploadType,
+} from '@/lib/upload-paths';
+
+export type { UploadType } from '@/lib/upload-paths';
+export { isSafeImagePath, isSafeVideoPath } from '@/lib/upload-paths';
 
 const VIDEO_EXT_BY_MIME: Record<string, string> = {
   'video/mp4': 'mp4',
@@ -28,24 +35,10 @@ const VIDEO_EXT_BY_MIME: Record<string, string> = {
   'video/quicktime': 'mov',
 };
 
-export type UploadType = 'hero' | 'gallery' | 'video';
-
-export function isSafeImagePath(imagePath: string, type?: UploadType): boolean {
-  if (!imagePath.startsWith('/') || imagePath.includes('..')) return false;
-  if (imagePath.startsWith('/uploads/')) {
-    if (type && !imagePath.startsWith(`/uploads/${type}/`)) return false;
-    return UPLOAD_PATH_REGEX.test(imagePath);
-  }
-  return LEGACY_PUBLIC_PATH_REGEX.test(imagePath);
-}
-
-export function isSafeVideoPath(videoPath: string): boolean {
-  if (!videoPath.startsWith('/') || videoPath.includes('..')) return false;
-  return VIDEO_PATH_REGEX.test(videoPath);
-}
-
 export function resolveUploadFilePath(imagePath: string): string | null {
-  if (!UPLOAD_PATH_REGEX.test(imagePath) && !VIDEO_PATH_REGEX.test(imagePath)) return null;
+  if (!UPLOAD_IMAGE_PATH_REGEX.test(imagePath) && !UPLOAD_VIDEO_PATH_REGEX.test(imagePath)) {
+    return null;
+  }
   const relative = imagePath.replace(/^\//, '');
   const resolved = path.resolve(process.cwd(), 'public', relative);
   const uploadsRoot = path.resolve(process.cwd(), 'public', 'uploads');

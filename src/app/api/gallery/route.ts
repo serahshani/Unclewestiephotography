@@ -6,6 +6,7 @@ import { getSessionFromRequest, validateCsrf } from '@/lib/auth';
 import { galleryCreateSchema } from '@/lib/validators';
 import { jsonError, jsonSuccess } from '@/lib/api-utils';
 import { resolveGalleryImages, resolveFeaturedGalleryImages } from '@/lib/media-fallback';
+import { normalizeImagePath } from '@/lib/image-path';
 import type { Prisma } from '@/generated/prisma';
 
 function parseTags(value: unknown): string[] {
@@ -13,9 +14,10 @@ function parseTags(value: unknown): string[] {
   return value.filter((t): t is string => typeof t === 'string');
 }
 
-function serializeGalleryImage<T extends { tags?: unknown }>(image: T) {
+function serializeGalleryImage<T extends { tags?: unknown; imagePath?: string }>(image: T) {
   return {
     ...image,
+    imagePath: normalizeImagePath(image.imagePath) || image.imagePath,
     tags: parseTags(image.tags),
   };
 }

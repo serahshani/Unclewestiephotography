@@ -6,6 +6,17 @@ import { getSessionFromRequest, validateCsrf } from '@/lib/auth';
 import { galleryUpdateSchema } from '@/lib/validators';
 import { deleteUploadedFile } from '@/lib/upload';
 import { jsonError, jsonSuccess } from '@/lib/api-utils';
+import { normalizeImagePath } from '@/lib/image-path';
+
+function serializeGalleryRecord<T extends { tags?: unknown; imagePath?: string }>(image: T) {
+  return {
+    ...image,
+    imagePath: normalizeImagePath(image.imagePath) || image.imagePath,
+    tags: Array.isArray(image.tags)
+      ? image.tags.filter((t): t is string => typeof t === 'string')
+      : [],
+  };
+}
 
 export async function GET(
   _request: NextRequest,
@@ -14,12 +25,7 @@ export async function GET(
   const { id } = await params;
   const image = await prisma.galleryImage.findUnique({ where: { id } });
   if (!image) return jsonError('Image not found', 404);
-  return jsonSuccess({
-    ...image,
-    tags: Array.isArray(image.tags)
-      ? image.tags.filter((t): t is string => typeof t === 'string')
-      : [],
-  });
+  return jsonSuccess(serializeGalleryRecord(image));
 }
 
 export async function PUT(
@@ -84,12 +90,7 @@ export async function PUT(
   revalidatePublicContent();
   revalidateGallerySlug(image.slug);
   if (existing.slug !== image.slug) revalidateGallerySlug(existing.slug);
-  return jsonSuccess({
-    ...image,
-    tags: Array.isArray(image.tags)
-      ? image.tags.filter((t): t is string => typeof t === 'string')
-      : [],
-  });
+  return jsonSuccess(serializeGalleryRecord(image));
 }
 
 export async function DELETE(
