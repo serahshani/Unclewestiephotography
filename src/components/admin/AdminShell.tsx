@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LogOut, Menu } from 'lucide-react';
+import { ExternalLink, LogOut, Menu } from 'lucide-react';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminConfirmModal from '@/components/admin/AdminConfirmModal';
 import { apiFetch, getCsrfToken } from '@/lib/admin-api';
@@ -178,7 +179,19 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                     <span className="font-semibold text-[#012D26]">{pageTitle}</span>
                   </p>
                 </div>
-                <div className="relative shrink-0">
+                <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+                  <Link
+                    href="/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Open homepage in a new tab"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-[#012D26]/15 bg-white px-2.5 py-1.5 text-xs font-medium text-[#012D26] transition-colors hover:border-[#012D26]/30 hover:bg-[#012D26]/5 sm:px-3 sm:py-2 sm:text-sm"
+                  >
+                    <ExternalLink size={14} className="shrink-0" aria-hidden />
+                    <span className="hidden min-[420px]:inline">View site</span>
+                    <span className="min-[420px]:hidden">Site</span>
+                  </Link>
+                  <div className="relative shrink-0">
                   <button
                     type="button"
                     title="Account menu"
@@ -233,6 +246,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                       </button>
                     </div>
                   ) : null}
+                  </div>
                 </div>
               </div>
             </header>

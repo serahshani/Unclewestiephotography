@@ -2,37 +2,36 @@
 
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import {
-  GALLERY_CATEGORIES,
+  VIDEO_CATEGORIES,
   filterFieldSm,
   filterInputClass,
   filterSearchWidth,
   filterSelectClass,
 } from './constants';
-import type { GalleryFiltersState } from './types';
+import type { VideoFiltersState } from './types';
 
-type GalleryFiltersProps = {
-  filters: GalleryFiltersState;
-  onChange: (filters: GalleryFiltersState) => void;
+type VideoFiltersProps = {
+  filters: VideoFiltersState;
+  onChange: (filters: VideoFiltersState) => void;
   onReset: () => void;
 };
 
-export default function GalleryFilters({ filters, onChange, onReset }: GalleryFiltersProps) {
+export default function VideoFilters({ filters, onChange, onReset }: VideoFiltersProps) {
   const hasActiveFilters =
     filters.search ||
     filters.category !== 'all' ||
-    filters.status !== 'all' ||
-    filters.featured !== 'all' ||
+    filters.sourceType !== 'all' ||
     filters.dateFrom ||
     filters.dateTo;
 
-  function update<K extends keyof GalleryFiltersState>(key: K, value: GalleryFiltersState[K]) {
+  function update<K extends keyof VideoFiltersState>(key: K, value: VideoFiltersState[K]) {
     onChange({ ...filters, [key]: value });
   }
 
   return (
     <section
       className="mb-4 rounded-lg border border-gray-200 bg-white shadow-sm"
-      aria-label="Gallery filters"
+      aria-label="Video filters"
     >
       <div className="flex flex-col gap-3 p-3 lg:flex-row lg:items-center lg:gap-4 lg:p-3.5">
         <div className="flex shrink-0 items-center justify-between gap-3 lg:justify-start">
@@ -65,7 +64,7 @@ export default function GalleryFilters({ filters, onChange, onReset }: GalleryFi
               value={filters.search}
               onChange={(e) => update('search', e.target.value)}
               className={`${filterInputClass} w-full pl-8`}
-              aria-label="Search gallery by title"
+              aria-label="Search videos by title"
             />
           </div>
 
@@ -76,7 +75,7 @@ export default function GalleryFilters({ filters, onChange, onReset }: GalleryFi
             aria-label="Filter by category"
           >
             <option value="all">All categories</option>
-            {GALLERY_CATEGORIES.map((c) => (
+            {VIDEO_CATEGORIES.map((c) => (
               <option key={c} value={c}>
                 {c.charAt(0).toUpperCase() + c.slice(1)}
               </option>
@@ -84,29 +83,16 @@ export default function GalleryFilters({ filters, onChange, onReset }: GalleryFi
           </select>
 
           <select
-            value={filters.status}
+            value={filters.sourceType}
             onChange={(e) =>
-              update('status', e.target.value as GalleryFiltersState['status'])
+              update('sourceType', e.target.value as VideoFiltersState['sourceType'])
             }
             className={`${filterSelectClass} ${filterFieldSm}`}
-            aria-label="Filter by status"
+            aria-label="Filter by source type"
           >
-            <option value="all">All statuses</option>
-            <option value="published">Published</option>
-            <option value="draft">Draft</option>
-          </select>
-
-          <select
-            value={filters.featured}
-            onChange={(e) =>
-              update('featured', e.target.value as GalleryFiltersState['featured'])
-            }
-            className={`${filterSelectClass} ${filterFieldSm}`}
-            aria-label="Filter by featured"
-          >
-            <option value="all">All featured</option>
-            <option value="true">Featured only</option>
-            <option value="false">Not featured</option>
+            <option value="all">All sources</option>
+            <option value="youtube">YouTube</option>
+            <option value="upload">Uploaded file</option>
           </select>
 
           <div className="flex w-full items-center gap-2 sm:w-auto">

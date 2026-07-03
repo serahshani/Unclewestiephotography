@@ -78,6 +78,14 @@ export const galleryBulkSchema = z.object({
   category: z.string().max(50).optional().nullable(),
 });
 
+export const videoReorderSchema = galleryReorderSchema;
+
+export const videoBulkSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1).max(100),
+  action: z.enum(['delete', 'setCategory']),
+  category: z.string().max(50).optional().nullable(),
+});
+
 export const videoSourceTypeSchema = z.enum(['youtube', 'upload']);
 
 export const videoCreateSchema = z
