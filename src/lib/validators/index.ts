@@ -53,11 +53,30 @@ export const galleryCreateSchema = z.object({
   imagePath: imagePathSchema,
   altText: z.string().min(1).max(300),
   category: z.string().max(50).optional().nullable(),
+  tags: z.array(z.string().min(1).max(50)).max(20).optional().nullable(),
   sortOrder: z.number().int().min(0).optional(),
   featured: z.boolean().optional(),
+  published: z.boolean().optional(),
+  photographerCredit: z.string().max(200).optional().nullable(),
+  fileSizeBytes: z.number().int().min(0).optional().nullable(),
+  width: z.number().int().min(1).optional().nullable(),
+  height: z.number().int().min(1).optional().nullable(),
 });
 
 export const galleryUpdateSchema = galleryCreateSchema.partial();
+
+export const galleryReorderSchema = z.array(
+  z.object({
+    id: z.string().min(1),
+    sortOrder: z.number().int().min(0),
+  })
+);
+
+export const galleryBulkSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1).max(100),
+  action: z.enum(['delete', 'publish', 'unpublish', 'setCategory']),
+  category: z.string().max(50).optional().nullable(),
+});
 
 export const videoSourceTypeSchema = z.enum(['youtube', 'upload']);
 

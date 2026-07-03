@@ -14,7 +14,12 @@ export async function GET(
   const { id } = await params;
   const image = await prisma.galleryImage.findUnique({ where: { id } });
   if (!image) return jsonError('Image not found', 404);
-  return jsonSuccess(image);
+  return jsonSuccess({
+    ...image,
+    tags: Array.isArray(image.tags)
+      ? image.tags.filter((t): t is string => typeof t === 'string')
+      : [],
+  });
 }
 
 export async function PUT(
@@ -65,15 +70,26 @@ export async function PUT(
     }
   }
 
+  const { tags, ...rest } = data;
+
   const image = await prisma.galleryImage.update({
     where: { id },
-    data: { ...data, slug },
+    data: {
+      ...rest,
+      ...(tags !== undefined ? { tags: tags ?? [] } : {}),
+      slug,
+    },
   });
 
   revalidatePublicContent();
   revalidateGallerySlug(image.slug);
   if (existing.slug !== image.slug) revalidateGallerySlug(existing.slug);
-  return jsonSuccess(image);
+  return jsonSuccess({
+    ...image,
+    tags: Array.isArray(image.tags)
+      ? image.tags.filter((t): t is string => typeof t === 'string')
+      : [],
+  });
 }
 
 export async function DELETE(

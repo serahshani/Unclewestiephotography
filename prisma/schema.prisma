@@ -51,20 +51,28 @@ model HeroSlide {
 }
 
 model GalleryImage {
-  id          String   @id @default(cuid())
-  title       String
-  description String?  @db.Text
-  imagePath   String
-  altText     String
-  slug        String   @unique
-  category    String?
-  sortOrder   Int      @default(0)
-  featured    Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  title              String
+  description        String?  @db.Text
+  imagePath          String
+  altText            String
+  slug               String   @unique
+  category           String?
+  tags               Json?
+  sortOrder          Int      @default(0)
+  featured           Boolean  @default(false)
+  published          Boolean  @default(true)
+  photographerCredit String?
+  viewCount          Int      @default(0)
+  fileSizeBytes      Int?
+  width              Int?
+  height             Int?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   @@index([category])
   @@index([featured, sortOrder])
+  @@index([published, sortOrder])
 }
 
 model Video {

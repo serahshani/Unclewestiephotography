@@ -65,34 +65,80 @@ export async function apiFetch<T>(
 
 export async function uploadFile(
   file: File,
-  type: 'hero' | 'gallery'
+  type: 'hero' | 'gallery',
+  onProgress?: (percent: number) => void
 ): Promise<{ imagePath: string; filename: string }>;
 export async function uploadFile(
   file: File,
-  type: 'video'
+  type: 'video',
+  onProgress?: (percent: number) => void
 ): Promise<{ videoPath: string; filename: string }>;
 export async function uploadFile(
   file: File,
-  type: 'hero' | 'gallery' | 'video'
+  type: 'hero' | 'gallery' | 'video',
+  onProgress?: (percent: number) => void
 ): Promise<{ imagePath?: string; videoPath?: string; filename: string }> {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('type', type);
 
   const csrf = getCsrfToken();
-  const response = await fetch('/api/upload', {
-    method: 'POST',
-    body: formData,
-    credentials: 'include',
-    headers: csrf ? { 'X-CSRF-Token': csrf } : {},
-  });
 
-  const data = await parseApiResponse(response);
-  if (!response.ok) {
-    throw new Error(
-      typeof data.error === 'string' ? data.error : fallbackErrorMessage(response.status)
-    );
+  if (!onProgress) {
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+      headers: csrf ? { 'X-CSRF-Token': csrf } : {},
+    });
+
+    const data = await parseApiResponse(response);
+    if (!response.ok) {
+      throw new Error(
+        typeof data.error === 'string' ? data.error : fallbackErrorMessage(response.status)
+      );
+    }
+
+    return data as { imagePath?: string; videoPath?: string; filename: string };
   }
 
-  return data as { imagePath?: string; videoPath?: string; filename: string };
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/upload');
+    xhr.withCredentials = true;
+    if (csrf) xhr.setRequestHeader('X-CSRF-Token', csrf);
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        onProgress(Math.round((event.loaded / event.total) * 100));
+      }
+    };
+
+    xhr.onload = () => {
+      void (async () => {
+        try {
+          const text = xhr.responseText;
+          const data = text.trim()
+            ? (JSON.parse(text) as ApiPayload)
+            : { error: fallbackErrorMessage(xhr.status) };
+
+          if (xhr.status < 200 || xhr.status >= 300) {
+            reject(
+              new Error(
+                typeof data.error === 'string' ? data.error : fallbackErrorMessage(xhr.status)
+              )
+            );
+            return;
+          }
+
+          resolve(data as { imagePath?: string; videoPath?: string; filename: string });
+        } catch {
+          reject(new Error('Received an invalid response from the server'));
+        }
+      })();
+    };
+
+    xhr.onerror = () => reject(new Error('Upload failed'));
+    xhr.send(formData);
+  });
 }

@@ -38,6 +38,7 @@ export async function getGalleryImages(options?: {
   try {
     const images = await prisma.galleryImage.findMany({
       where: {
+        published: true,
         ...(options?.category && options.category !== 'all'
           ? { category: options.category }
           : {}),
@@ -76,6 +77,7 @@ export async function getGalleryImageBySlug(slug: string) {
   try {
     const image = await prisma.galleryImage.findUnique({ where: { slug } });
     if (image) {
+      if (!image.published) return null;
       const [resolved] = await resolveGalleryImages([image]);
       return resolved ?? image;
     }
@@ -116,7 +118,7 @@ export async function getRelatedGalleryImages(
 ) {
   try {
     const related = await prisma.galleryImage.findMany({
-      where: { id: { not: excludeId } },
+      where: { id: { not: excludeId }, published: true },
       orderBy: { sortOrder: 'asc' },
     });
 
@@ -136,6 +138,7 @@ export async function getRelatedGalleryImages(
 export async function getAllGallerySlugs() {
   try {
     const slugs = await prisma.galleryImage.findMany({
+      where: { published: true },
       select: { slug: true },
     });
     if (slugs.length > 0) return slugs;

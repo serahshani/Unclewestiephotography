@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import GalleryViewTracker from '@/components/GalleryViewTracker';
 import PublicLayout from '@/components/layout/PublicLayout';
 import Breadcrumbs from '@/components/seo/Breadcrumbs';
 import JsonLd from '@/components/seo/JsonLd';
@@ -68,6 +69,9 @@ export default async function GalleryDetailPage({ params }: Props) {
 
   return (
     <PublicLayout>
+      {!image.id.startsWith('default-gallery-') && (
+        <GalleryViewTracker imageId={image.id} />
+      )}
       <JsonLd
         data={[
           webPageSchema(siteUrl, `/portfolio/${slug}`, image.title, description),

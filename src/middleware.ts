@@ -54,6 +54,13 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
+    if (
+      method === 'POST' &&
+      /^\/api\/gallery\/[^/]+\/view$/.test(pathname)
+    ) {
+      return NextResponse.next();
+    }
+
     if (MUTATING_METHODS.has(method) || pathname.startsWith('/api/auth/')) {
       const token = request.cookies.get(AUTH_COOKIES.TOKEN)?.value;
       const session = token ? await verifyToken(token) : null;

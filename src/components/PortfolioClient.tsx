@@ -5,12 +5,14 @@ import Link from 'next/link';
 import { useState } from 'react';
 import LightboxModal from '@/app/Components/LightboxModal';
 import { getYouTubeThumbnail } from '@/lib/youtube';
+import { trackGalleryView } from '@/lib/gallery-view-tracker';
 
 export interface MediaItem {
   type: 'image' | 'video';
   src?: string;
   alt?: string;
   slug?: string;
+  galleryId?: string;
   videoSource?: 'youtube' | 'upload';
   videoId?: string;
   title?: string;
@@ -85,6 +87,9 @@ export default function PortfolioClient({
     categories.find((cat) => cat.id === activeCategory)?.name ?? 'Gallery';
 
   const openLightbox = (mediaItem: MediaItem) => {
+    if (mediaItem.type === 'image') {
+      trackGalleryView(mediaItem.galleryId);
+    }
     setSelectedMedia(mediaItem);
     setLightboxOpen(true);
   };

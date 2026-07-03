@@ -42,6 +42,7 @@ function buildPortfolioData(
     alt: img.altText,
     title: img.title,
     slug: img.slug,
+    galleryId: img.id,
     category: img.category ?? undefined,
     sortOrder: img.sortOrder,
     createdAt: img.createdAt.getTime(),
