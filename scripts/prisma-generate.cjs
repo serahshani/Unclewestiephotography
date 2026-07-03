@@ -109,17 +109,4 @@ if (!fs.existsSync(clientIndex)) {
   process.exit(1);
 }
 
-const linuxEngine = path.join(clientDir, 'query-engine-debian-openssl-1.1.x');
-if (process.platform === 'linux') {
-  if (!fs.existsSync(linuxEngine)) {
-    console.error('\nLinux query engine missing after generate:', linuxEngine);
-    console.error('Upload query-engine-debian-openssl-1.1.x from your PC or run npm run prisma:generate on the server.');
-    process.exit(1);
-  }
-  fs.chmodSync(linuxEngine, 0o755);
-}
-
 console.log('Prisma client ready:', clientIndex);
-if (fs.existsSync(linuxEngine)) {
-  console.log('Linux engine ready:', linuxEngine);
-}

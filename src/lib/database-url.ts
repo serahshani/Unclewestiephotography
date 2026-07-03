@@ -62,6 +62,22 @@ export function getDatabaseUrl(): string {
   return url;
 }
 
+export function getMysqlConnectionConfig() {
+  const socket = resolveMysqlSocket();
+
+  const config = {
+    host: process.env.DB_HOST ?? 'localhost',
+    port: Number(process.env.DB_PORT ?? '3306'),
+    user: process.env.DB_USERNAME ?? 'root',
+    password: process.env.DB_PASSWORD ?? '',
+    database: process.env.DB_DATABASE ?? 'unclewestie',
+    connectionLimit: 5,
+    ...(socket ? { socketPath: socket } : {}),
+  };
+
+  return config;
+}
+
 export function getDatabaseTargetLabel(): string {
   const socket = resolveMysqlSocket();
   const host = process.env.DB_HOST ?? 'localhost';
