@@ -2,7 +2,13 @@ import type { MetadataRoute } from 'next';
 import { getSiteUrl } from '@/lib/api-utils';
 import { getAllGallerySlugs } from '@/lib/data';
 
-const STATIC_ROUTES: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[0]['changeFrequency'] }[] = [
+export const revalidate = 3600;
+
+const STATIC_ROUTES: {
+  path: string;
+  priority: number;
+  changeFrequency: MetadataRoute.Sitemap[0]['changeFrequency'];
+}[] = [
   { path: '', priority: 1, changeFrequency: 'daily' },
   { path: '/about', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/services', priority: 0.8, changeFrequency: 'monthly' },
@@ -15,15 +21,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
 
   let gallerySlugs: { slug: string; updatedAt: Date }[] = [];
+
   try {
     const { prisma } = await import('@/lib/prisma');
     gallerySlugs = await prisma.galleryImage.findMany({
+      where: { published: true },
       select: { slug: true, updatedAt: true },
+      orderBy: { updatedAt: 'desc' },
     });
   } catch {
-    gallerySlugs = await getAllGallerySlugs().then((items) =>
-      items.map(({ slug }) => ({ slug, updatedAt: new Date() }))
-    );
+    gallerySlugs = [];
+  }
+
+  if (gallerySlugs.length === 0) {
+    gallerySlugs = (await getAllGallerySlugs()).map(({ slug }) => ({
+      slug,
+      updatedAt: new Date(),
+    }));
   }
 
   return [

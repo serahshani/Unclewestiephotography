@@ -18,7 +18,8 @@ interface HomeHeroProps {
   logoPath?: string | null;
   ctaText?: string | null;
   ctaUrl?: string | null;
-  seoTitle: string;
+  seoH1: string;
+  seoSubtitle?: string;
 }
 
 export default function HomeHero({
@@ -27,7 +28,8 @@ export default function HomeHero({
   logoPath,
   ctaText,
   ctaUrl,
-  seoTitle,
+  seoH1,
+  seoSubtitle,
 }: HomeHeroProps) {
   const [current, setCurrent] = useState(0);
   const heroImages = slides.length > 0 ? slides : [{ imagePath: '/Hero1.webp', altText: 'Hero' }];
@@ -97,9 +99,14 @@ export default function HomeHero({
           ) : null}
         </motion.div>
 
-        <h1 className="sr-only">{seoTitle}</h1>
+        <h1 className="sr-only">{seoH1}</h1>
+        {seoSubtitle ? (
+          <p className="mb-3 max-w-xl text-sm font-medium text-white/90 sm:text-base">
+            {seoSubtitle}
+          </p>
+        ) : null}
         <p
-          className="text-3xl md:text-5xl font-bold leading-tight"
+          className="text-3xl font-bold leading-tight md:text-5xl"
           aria-hidden="true"
         >
           <Typewriter

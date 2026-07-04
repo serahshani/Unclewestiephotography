@@ -23,13 +23,14 @@ export const dynamic = 'force-dynamic';
 const PAGE_TITLE = 'Wedding & Portrait Photography in Kenya';
 const PAGE_DESCRIPTION =
   'Uncle Westiee Studios — wedding, portrait, and event photography and videography in Nairobi, Samburu, Maralal, and across Kenya. View our portfolio and book your session on WhatsApp.';
+const PAGE_KEYWORDS =
+  'wedding photographer Kenya, wedding photography Nairobi, portrait photographer Kenya, event photographer Samburu, videography Kenya, family photoshoot Kenya, wedding videography Maralal, photographer Samburu, Uncle Westiee Studios, photography packages Kenya, best photographer Kenya';
 
 export const metadata: Metadata = createPageMetadata({
   title: PAGE_TITLE,
   description: PAGE_DESCRIPTION,
   path: '/',
-  keywords:
-    'wedding photographer Kenya, portrait photography Nairobi, Uncle Westiee Studios, videography Kenya, event photographer Samburu, family photoshoot Kenya, wedding videography Maralal, photography packages Kenya',
+  keywords: PAGE_KEYWORDS,
   image: '/Hero1.webp',
 });
 
@@ -40,7 +41,6 @@ export default async function Home() {
   ]);
 
   const siteUrl = getSiteUrl();
-  const heroTitle = hero.typewriterWords.join(' ') || SITE_NAME;
   const featuredListItems = featuredImages.slice(0, 10).map((img) => ({
     name: img.title,
     url: img.slug ? `/portfolio/${img.slug}` : '/portfolio',
@@ -74,7 +74,8 @@ export default async function Home() {
         logoPath={hero.logoPath}
         ctaText={hero.ctaText}
         ctaUrl={hero.ctaUrl}
-        seoTitle={heroTitle}
+        seoH1={PAGE_TITLE}
+        seoSubtitle="Wedding, portrait & event photography · Nairobi · Samburu · Maralal · Kenya"
       />
       <ServicesPage />
       <AboutPage />

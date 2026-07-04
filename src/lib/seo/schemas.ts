@@ -7,21 +7,35 @@ function escapeJsonLd(value: string): string {
 export function organizationSchema(siteUrl: string) {
   return {
     '@context': 'https://schema.org',
-    '@type': ['Organization', 'LocalBusiness'],
+    '@type': ['Organization', 'LocalBusiness', 'ProfessionalService'],
     name: 'Uncle Westiee Studios',
     url: siteUrl,
     logo: `${siteUrl}/Westieelogo.png`,
     image: `${siteUrl}/Westieelogo.png`,
     description:
-      'Professional photography and videography services in Kenya. Weddings, events, portraits, and more.',
+      'Wedding, portrait, and event photography and videography in Nairobi, Samburu, Maralal, and across Kenya. Uncle Westiee Studios captures candid moments and timeless portraits.',
     email: CONTACT.email,
     telephone: CONTACT.phone,
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Nairobi',
+      addressRegion: 'Nairobi County',
       addressCountry: 'KE',
     },
-    areaServed: 'Kenya',
+    areaServed: [
+      { '@type': 'Country', name: 'Kenya' },
+      { '@type': 'City', name: 'Nairobi' },
+      { '@type': 'AdministrativeArea', name: 'Samburu' },
+      { '@type': 'City', name: 'Maralal' },
+    ],
+    knowsAbout: [
+      'Wedding photography',
+      'Portrait photography',
+      'Event photography',
+      'Wedding videography',
+      'Family photography',
+      'Fashion photography',
+    ],
     sameAs: [SOCIAL.facebook, SOCIAL.instagram, SOCIAL.youtube, SOCIAL.tiktok],
   };
 }

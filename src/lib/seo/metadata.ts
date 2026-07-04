@@ -67,6 +67,11 @@ export const rootMetadata: Metadata = {
   keywords:
     'Uncle Westiee Studios, Photography Kenya, Wedding Videographer, Best Photographer in Kenya, Event Coverage Kenya',
   alternates: { canonical: getSiteUrl() },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
   openGraph: {
     title: `${SITE_NAME} – Photography & Videography`,
     description: SITE_DESCRIPTION,

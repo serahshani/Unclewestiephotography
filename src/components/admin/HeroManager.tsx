@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import Image from 'next/image';
 import { apiFetch, uploadFile } from '@/lib/admin-api';
 import { MAX_HERO_SIZE_BYTES, formatMaxHeroSizeLabel } from '@/lib/upload-limits';
 import { Upload, Trash2, Save, Send, ImageIcon } from 'lucide-react';
 import { useToast } from '@/components/admin/useToast';
+import DeleteConfirmationDialog from '@/components/admin/gallery/DeleteConfirmationDialog';
+import PublicImage from '@/components/PublicImage';
 
 interface HeroData {
   title: string;
@@ -109,6 +110,11 @@ export default function HeroManager() {
   const [typewriterInput, setTypewriterInput] = useState('');
   const [selectedSlideId, setSelectedSlideId] = useState<string | null>(null);
   const [logoPreviewSrc, setLogoPreviewSrc] = useState<string | null>(null);
+  const [deleteSlideTarget, setDeleteSlideTarget] = useState<{
+    id: string;
+    altText: string;
+  } | null>(null);
+  const [deletingSlide, setDeletingSlide] = useState(false);
 
   const loadHero = useCallback(async () => {
     setLoading(true);
@@ -252,17 +258,22 @@ export default function HeroManager() {
     e.target.value = '';
   }
 
-  async function deleteSlide(id: string) {
-    if (!confirm('Delete this slide?')) return;
+  async function confirmDeleteSlide() {
+    if (!deleteSlideTarget) return;
+    setDeletingSlide(true);
     try {
-      await apiFetch(`/api/hero/slides/${id}`, { method: 'DELETE' });
+      await apiFetch(`/api/hero/slides/${deleteSlideTarget.id}`, { method: 'DELETE' });
+      const removedId = deleteSlideTarget.id;
+      setDeleteSlideTarget(null);
       await loadHero();
-      if (selectedSlideId === id) {
+      if (selectedSlideId === removedId) {
         setSelectedSlideId(null);
       }
       notify('Slide removed');
     } catch (err) {
       notify(err instanceof Error ? err.message : 'Delete failed', 'error');
+    } finally {
+      setDeletingSlide(false);
     }
   }
 
@@ -302,6 +313,20 @@ export default function HeroManager() {
   return (
     <>
       {Toast}
+      <DeleteConfirmationDialog
+        open={Boolean(deleteSlideTarget)}
+        title="Delete slide"
+        message={
+          deleteSlideTarget
+            ? `Are you sure you want to delete "${deleteSlideTarget.altText}"? This cannot be undone.`
+            : ''
+        }
+        loading={deletingSlide}
+        onConfirm={() => void confirmDeleteSlide()}
+        onCancel={() => {
+          if (!deletingSlide) setDeleteSlideTarget(null);
+        }}
+      />
     <div className="mx-auto w-full max-w-3xl pb-28 sm:pb-8">
       <header className="mb-5">
         <h1 className="text-2xl font-bold text-[#012D26]">Hero Section</h1>
@@ -319,7 +344,7 @@ export default function HeroManager() {
         </div>
         <div className="relative h-52 bg-black sm:h-64">
           {previewSlide && (
-            <Image
+            <PublicImage
               src={previewSlide.imagePath}
               alt="Homepage preview"
               fill
@@ -458,11 +483,10 @@ export default function HeroManager() {
                   aria-label={`Preview ${slide.altText}${isSelected ? ' (selected)' : ''}`}
                 >
                   <div className="relative aspect-video">
-                    <Image
+                    <PublicImage
                       src={slide.imagePath}
                       alt={slide.altText}
                       fill
-                      unoptimized
                       className="object-cover"
                       sizes="(max-width: 640px) 50vw, 200px"
                     />
@@ -483,7 +507,7 @@ export default function HeroManager() {
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      deleteSlide(slide.id);
+                      setDeleteSlideTarget({ id: slide.id, altText: slide.altText });
                     }}
                     className="absolute right-1.5 top-1.5 z-10 rounded bg-red-600 p-1 text-white"
                     aria-label="Delete slide"
